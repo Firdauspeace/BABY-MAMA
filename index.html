@@ -1,0 +1,1166 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fffaf7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Baby Mama">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="description" content="Baby Mama: teman ibu mengandung untuk rekod tendangan baby, ubat dan perkembangan baby minggu demi minggu.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>Baby Mama</title>
+<style>
+:root{--rose:#b95d69;--rose-d:#9e4a56;--pink:#f8e4e2;--cream:#fff8f3;--sage:#7d9270;--sage-bg:#eef2e9;--ink:#53383a;--muted:#8a7273;--line:#f0d9d5;--warn-bg:#fff1ec;--warn:#a2453a}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#f5ece8;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button{font:inherit;color:inherit}
+.app{max-width:480px;min-height:100vh;margin:auto;background:var(--cream);position:relative;padding-bottom:96px;box-shadow:0 0 35px #55383a16}
+.top{min-height:64px;padding:calc(12px + env(safe-area-inset-top)) 18px 12px;display:flex;align-items:center;justify-content:space-between;background:#fffaf7;position:sticky;top:0;z-index:2;border-bottom:1px solid #faeeeb}
+.brand{font-weight:850;font-size:21px;color:var(--rose);display:flex;align-items:center;gap:8px}
+.brandmark{width:34px;height:34px;border-radius:50%;background:var(--pink);display:grid;place-items:center}
+.iconbtn{border:0;background:none;color:var(--rose);font-size:20px;cursor:pointer;width:40px;height:40px;border-radius:50%}
+.iconbtn:hover{background:var(--pink)}
+.page{padding:16px;display:none;animation:fade .25s}
+.page.active{display:block}
+@keyframes fade{from{opacity:.4;transform:translateY(5px)}to{opacity:1;transform:none}}
+h1{font-size:22px;margin:4px 0 4px}
+h2{font-size:17px;margin:0 0 8px}
+p{margin:5px 0;color:var(--muted);font-size:14px;line-height:1.5}
+a{color:var(--rose);font-weight:700}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;margin:12px 0;box-shadow:0 4px 12px #a7515a0b}
+.welcome{display:flex;align-items:center;justify-content:space-between;gap:9px;margin-bottom:4px}
+.bigemoji{font-size:46px}
+.preg{background:linear-gradient(120deg,#f9e4e1,#fff2eb)}
+.pregtop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.pregtop small{display:block;color:var(--muted);font-size:12px}
+.pregtop strong{display:block;font-size:30px;color:var(--rose);line-height:1.15}
+.pregtop span{font-size:13px;color:var(--muted)}
+.sizechip{border:0;background:#fff;border-radius:16px;padding:8px 10px;font-size:12px;color:var(--ink);cursor:pointer;text-align:center;max-width:120px;box-shadow:0 3px 8px #a7515a12}
+.sizechip span{display:block;font-size:30px;line-height:1.2;color:inherit}
+.bar{height:9px;background:#fff;border-radius:9px;margin:14px 0 8px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#e7a0a6,var(--rose));border-radius:9px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:#fff;border-radius:17px;border:1px solid var(--line);padding:13px;font-size:13px;text-align:left;cursor:pointer;color:var(--ink)}
+.stat b{display:block;margin-top:6px;color:var(--rose);font-size:17px}
+.stat small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.bellyArt{background:linear-gradient(140deg,#fff2e8,#f7dfdf);border-radius:20px;padding:6px;margin:6px 0 4px;cursor:pointer;-webkit-tap-highlight-color:transparent;position:relative}
+.bellyArt:focus-visible{outline:3px solid #e7a0a6}
+.bellyArt svg{display:block;width:100%;height:auto}
+.bellyArt{padding:6px 6px 0;overflow:hidden}
+.bellyArt .hint{position:absolute;top:10px;right:10px;background:#fffd;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--rose);pointer-events:none;transition:opacity .2s}
+.bellyArt [class]{transform-box:fill-box}
+.bellyArt .babyBob{animation:bob 3s ease-in-out infinite}
+.bellyArt .leg{transform-origin:15% 70%}
+.bellyArt .bulge{transform-origin:center;transform:scale(0)}
+.bellyArt .impact,.bellyArt .momWow,.bellyArt .heart{opacity:0}
+.bellyArt.kicking .leg{animation:kickleg .9s ease-in-out}
+.bellyArt.kicking .bulge{animation:bulge .9s ease-in-out}
+.bellyArt.kicking .belly{animation:wobble .9s ease-in-out}
+.bellyArt.kicking .impact{animation:impact .9s ease-out}
+.bellyArt.kicking .momWow{animation:wow .9s ease-in-out}
+.bellyArt.kicking .momHappy{animation:hap .9s ease-in-out}
+.bellyArt.kicking .heart{animation:heart 1.4s ease-out}
+.bellyArt.kicking .hint{opacity:0}
+.bellyArt .h2{animation-delay:.2s!important}.bellyArt .h3{animation-delay:.4s!important}
+@keyframes bob{50%{transform:translateY(-2px) rotate(-2deg)}}
+@keyframes kickleg{0%,100%{transform:none}30%,48%{transform:translate(13px,-3px) rotate(-14deg)}}
+@keyframes bulge{0%,18%,100%{transform:scale(0)}34%,52%{transform:scale(1)}}
+@keyframes wobble{0%,100%{transform:none}36%{transform:translateX(2px) rotate(.6deg)}52%{transform:translateX(-1px)}}
+@keyframes impact{0%,24%{opacity:0;transform:translateX(-5px)}38%{opacity:1;transform:none}75%{opacity:1}100%{opacity:0}}
+@keyframes wow{0%,22%,82%,100%{opacity:0}34%,70%{opacity:1}}
+@keyframes hap{0%,22%,82%,100%{opacity:1}34%,70%{opacity:0}}
+@keyframes heart{0%{opacity:0;transform:translateY(8px)}30%{opacity:1}100%{opacity:0;transform:translateY(-30px)}}
+.btn{border:0;border-radius:30px;background:var(--rose);color:#fff;padding:13px 18px;font-weight:750;font-size:15px;cursor:pointer;box-shadow:0 5px 12px #b95d692c}
+.btn:hover{background:var(--rose-d)}
+.btn.secondary{background:var(--sage-bg);color:#53694d;box-shadow:none}
+.btn.ghost{background:#fff;color:var(--rose);border:1px solid var(--line);box-shadow:none}
+.btn.danger{background:#fff;color:var(--warn);border:1px solid #f1c9c0;box-shadow:none}
+.btn.full{width:100%;margin:8px 0}
+.btn:active{transform:scale(.97)}
+.row{display:flex;gap:10px}.row>*{flex:1}
+label{display:block;font-size:13px;font-weight:700;margin:10px 0 5px}
+label.check{display:flex;align-items:center;gap:10px;font-weight:600;cursor:pointer}
+input,select{font:inherit;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px;width:100%;outline-color:#c87980;min-height:44px}
+input[type=checkbox]{width:22px;height:22px;min-height:0;accent-color:var(--sage);flex:none;margin:0}
+input[type=range]{padding:0;border:0;accent-color:var(--rose);background:none;min-height:30px}
+input[readonly]{background:#fdf6f3}
+.fieldrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.log{border-bottom:1px solid #f6e9e6;padding:10px 2px;display:flex;justify-content:space-between;align-items:center;font-size:14px;gap:10px}
+.log:last-child{border-bottom:0}
+.pill{color:var(--sage);font-size:12px;background:var(--sage-bg);padding:4px 9px;border-radius:20px;white-space:nowrap}
+.pill.late{color:var(--warn);background:var(--warn-bg)}
+.subtle{font-size:12px;color:var(--muted)}
+.center{text-align:center}
+.warn{background:var(--warn-bg);border-color:#f6d3c9}
+.warn h2{color:var(--warn)}
+.warn p{color:#7d5148}
+.tapbig{width:150px;height:150px;border-radius:50%;border:0;margin:6px auto 4px;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#d97f8a,var(--rose));color:#fff;font-size:17px;font-weight:800;cursor:pointer;box-shadow:0 10px 24px #b95d6940;line-height:1.3}
+.tapbig span{font-size:36px;display:block}
+.tapbig:active{transform:scale(.95)}
+.session{text-align:center}
+.session .count{font-size:44px;font-weight:850;color:var(--rose);line-height:1}
+.session .timer{font-variant-numeric:tabular-nums;font-size:15px;color:var(--muted);margin:4px 0 10px}
+.session .count small{font-size:20px;color:var(--muted);font-weight:700}
+.goal{font-weight:700;font-size:13px;color:var(--rose);margin:0 0 6px}
+.goal.ok{color:var(--sage)}
+.dotrow{display:flex;align-items:center;justify-content:center;gap:8px;margin:5px 0}
+.dotrow small{width:58px;text-align:right;font-size:11px;color:var(--muted);flex:none}
+.dots{display:grid;grid-template-columns:repeat(10,14px);gap:5px}
+.dots i{width:14px;height:14px;border-radius:50%;background:#f3e2df}
+.dots i.on{background:var(--rose)}
+.dots.extra i{background:#edf1e8}
+.dots.extra i.on{background:var(--sage)}
+.daysum{font-size:13px;font-weight:700;color:var(--rose);margin:4px 0}
+.growth{text-align:center;background:linear-gradient(160deg,#fff0eb,#fff)}
+.weeknav{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.weeknav b{font-size:20px;display:block}
+.round{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--rose);font-size:24px;cursor:pointer;flex:none}
+.fruitwrap{height:170px;display:grid;place-items:center}
+.fruit{line-height:1;animation:float 2.4s ease-in-out infinite;transition:font-size .3s}
+@keyframes float{50%{transform:translateY(-7px) rotate(-4deg)}}
+.sizes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.sizes div{background:#fff;border:1px solid var(--line);border-radius:14px;padding:9px}
+.sizes small{display:block;font-size:12px;color:var(--muted)}
+.sizes b{color:var(--rose);font-size:17px}
+.medicine{display:grid;grid-template-columns:24px 1fr auto auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #f4e7e4}
+.medicine:last-child{border-bottom:0}
+.medicine.done b{text-decoration:line-through;color:var(--muted)}
+.medtime{font-size:12px;color:var(--muted)}
+.medact{display:flex}
+.medact .iconbtn{font-size:16px;width:34px;height:34px}
+.status{font-size:13px;margin:6px 0;font-weight:600}
+/* Babak bersalin 3D */
+.birthScene{background:radial-gradient(circle at 30% 20%,#fffaf4,#fbe6e4 60%,#f5d6d8);border-radius:20px;overflow:hidden;margin:2px 0 10px}
+.birthScene svg{display:block;width:100%;height:auto}
+.birthScene [class],.b3spark text,.b3hearts path,.b3conf *{transform-box:fill-box}
+.b3conf *{transform-origin:center}
+.b3bob{animation:bob 3s ease-in-out infinite}
+.b3belly{transform-origin:0% 55%;transition:transform 1.3s cubic-bezier(.5,0,.3,1),opacity 1.1s}
+.b3glowc{opacity:0;transition:opacity .8s}
+.b3spark text{opacity:0;transform-origin:center}
+.b3flash{opacity:0;transform-origin:center}
+.armAfter{opacity:0;transition:opacity .8s .7s}
+.armBefore{transition:opacity .4s}
+.b3newborn{opacity:0;transform:translateX(-60px) scale(.3);transform-origin:center;transition:transform 1.1s cubic-bezier(.3,1.5,.5,1) .6s,opacity .6s .6s}
+.b3rock{transform-origin:50% 90%}
+.b3wave{transform-origin:50% 100%}
+.b3hearts path{opacity:0;transform-origin:center}
+.b3hello{opacity:0;transform:translateY(8px);transition:opacity .8s 1.5s,transform .8s 1.5s}
+.b3conf *{opacity:0}
+.birthScene.glow .b3glowc{opacity:1;animation:glowp .9s ease-in-out infinite alternate}
+.birthScene.glow .b3spark text{animation:twinkle .8s ease-in-out infinite alternate}
+.birthScene.glow .b3spark text:nth-child(2){animation-delay:.2s}.birthScene.glow .b3spark text:nth-child(3){animation-delay:.4s}.birthScene.glow .b3spark text:nth-child(4){animation-delay:.6s}
+.birthScene.glow .b3belly{animation:wobble 1.2s ease-in-out infinite}
+.birthScene.flash .b3flash{animation:flash 1.2s ease-out forwards}
+.birthScene.born .b3belly{transform:scale(.15,.55);opacity:0;animation:none}
+.birthScene.born .armBefore{opacity:0}
+.birthScene.born .armAfter{opacity:1}
+.birthScene.born .b3newborn{opacity:1;transform:none}
+.birthScene.born .b3rock{animation:rock 2.6s ease-in-out 1.8s infinite}
+.birthScene.born .b3wave{animation:wave .5s ease-in-out 1.8s 8 alternate}
+.birthScene.born .b3hearts path{animation:heartloop 2.8s ease-out 1.5s infinite}
+.birthScene.born .b3hearts path:nth-child(2){animation-delay:2.2s}.birthScene.born .b3hearts path:nth-child(3){animation-delay:2.9s}
+.birthScene.born .b3hello{opacity:1;transform:none}
+.birthScene.born .b3conf *{animation:conf var(--t,2.4s) ease-in var(--d,1.2s) forwards}
+@keyframes glowp{to{opacity:.5}}
+@keyframes twinkle{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1.2)}}
+@keyframes flash{0%{opacity:0;transform:scale(.3)}25%{opacity:1}100%{opacity:0;transform:scale(6)}}
+@keyframes rock{50%{transform:rotate(-4deg)}}
+@keyframes wave{to{transform:translateY(-4px) rotate(-22deg)}}
+@keyframes heartloop{0%{opacity:0;transform:translateY(10px) scale(.6)}25%{opacity:1}100%{opacity:0;transform:translateY(-34px) scale(1)}}
+@keyframes conf{0%{opacity:0;transform:translateY(-20px) rotate(0)}10%{opacity:1}100%{opacity:0;transform:translateY(220px) rotate(320deg)}}
+.birthStatus{font-size:14px;color:var(--ink);margin:4px 0}
+#birthBarWrap{background:#f6e6e3;margin:8px 0 6px}
+.btn:disabled{background:#eadada;color:#9a8283;box-shadow:none;cursor:not-allowed;transform:none}
+@keyframes pop{to{transform:scale(1.14) rotate(7deg)}}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(480px,100%);display:flex;background:#fffdfa;border-top:1px solid var(--line);z-index:3;padding-bottom:env(safe-area-inset-bottom)}
+.nav button{border:0;background:none;color:#978587;font-size:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;flex:1;height:68px;min-width:0}
+.nav button span{font-size:20px}
+.nav button.active{color:var(--rose);font-weight:800}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#563b3c;color:#fff;padding:10px 16px;border-radius:20px;font-size:13px;opacity:0;pointer-events:none;transition:.2s;z-index:5;max-width:calc(100% - 32px);width:max-content;text-align:center}
+.toast.show{opacity:1}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="brand"><img class="brandmark" src="icons/icon-192.png" alt="">Baby Mama</div>
+  <div><button class="iconbtn" id="musicBtn" onclick="toggleMusic()" title="Muzik piano" aria-label="Muzik piano">🎵</button><button class="iconbtn" onclick="go('meds')" title="Peringatan ubat" aria-label="Peringatan ubat">🔔</button></div>
+</header>
+
+<main>
+<!-- UTAMA -->
+<section class="page active" id="home">
+  <div class="welcome"><div><p>Selamat datang,</p><h1 id="hello">Ibu Sayang 🤍</h1></div><span class="bigemoji">🤰</span></div>
+  <div class="card preg" id="pregCard"></div>
+  <div class="grid">
+    <button class="stat" onclick="go('kicks')">👣 Tendangan hari ini<b id="todayCount">0 kali</b><small id="lastKick">Belum ada rekod</small></button>
+    <button class="stat" onclick="go('meds')">💊 Ubat seterusnya<b id="nextMed">—</b><small id="nextMedTime"></small></button>
+  </div>
+  <div class="card">
+    <h2>Baby hari ini</h2>
+    <div class="bellyArt" role="button" tabindex="0" aria-label="Sentuh untuk lihat baby menendang" onclick="tapBaby()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();tapBaby()}"></div>
+    <button class="btn full" onclick="addKick()">👣 Rekod tendangan +1</button>
+    <p class="subtle center">Rasa baby bergerak? Tekan butang untuk rekod. Tarikh dan masa direkod automatik.</p>
+  </div>
+  <div class="card warn">
+    <h2>⚠️ Pergerakan baby berkurang?</h2>
+    <p>Jangan tunggu esok. Jika gerakan baby <b>kurang atau berbeza dari biasa</b>, hubungi klinik atau pergi ke hospital <b>segera</b>. Kecemasan: <a href="tel:999">999</a>.</p>
+  </div>
+</section>
+
+<!-- TENDANGAN -->
+<section class="page" id="kicks">
+  <h1>Rekod Tendangan Baby</h1>
+  <p>Tekan butang setiap kali baby bergerak. Kenal corak gerakan baby setiap hari.</p>
+
+  <div class="card session" id="sessionCard"></div>
+
+  <div class="card">
+    <h2>Masukkan rekod manual</h2>
+    <p class="subtle">Untuk tendangan yang terlepas rekod tadi.</p>
+    <div class="fieldrow">
+      <div><label for="kickDate">Tarikh</label><input id="kickDate" type="date"></div>
+      <div><label for="kickTime">Masa</label><input id="kickTime" type="time"></div>
+    </div>
+    <label for="kickDay">Hari</label><input id="kickDay" readonly>
+    <button class="btn full" onclick="saveKick()">＋ Simpan rekod</button>
+  </div>
+
+  <div class="card">
+    <h2>Rekod tendangan</h2>
+    <div class="fieldrow">
+      <div><label for="filterDate">Tarikh</label><input id="filterDate" type="date"></div>
+      <div><label for="filterDay">Hari</label><input id="filterDay" readonly></div>
+    </div>
+    <p class="daysum" id="daySum"></p>
+    <div id="kickList"></div>
+  </div>
+
+  <div class="card">
+    <h2>Sesi kiraan lepas</h2>
+    <div id="sessionList"></div>
+  </div>
+
+  <div class="card warn">
+    <h2>⚠️ Penting</h2>
+    <p>App ini hanya membantu ibu merekod. Ia tidak boleh menentukan sama ada baby sihat. Jika gerakan baby kurang atau berubah, hubungi klinik atau hospital <b>segera</b>. Kecemasan: <a href="tel:999">999</a>.</p>
+  </div>
+</section>
+
+<!-- BABY -->
+<section class="page" id="growth">
+  <h1>Perkembangan Baby</h1>
+  <p id="growthIntro">Lihat saiz baby minggu demi minggu.</p>
+  <div class="card growth">
+    <div class="weeknav">
+      <button class="round" onclick="setWeek(curWeek-1)" aria-label="Minggu sebelum">‹</button>
+      <div><b id="wkTitle">Minggu 12</b><span class="pill hidden" id="wkTag">Minggu ini</span></div>
+      <button class="round" onclick="setWeek(curWeek+1)" aria-label="Minggu seterusnya">›</button>
+    </div>
+    <div class="fruitwrap"><div class="fruit" id="fruit">🍋</div></div>
+    <h2 id="fruitName">Sebesar limau nipis</h2>
+    <div class="sizes">
+      <div><small>Panjang</small><b id="wkLen">—</b></div>
+      <div><small>Berat</small><b id="wkWt">—</b></div>
+    </div>
+    <input type="range" min="4" max="40" id="wkRange" aria-label="Pilih minggu" oninput="setWeek(+this.value)">
+    <p id="wkNote"></p>
+  </div>
+  <p class="subtle center">Saiz ialah anggaran purata. Setiap baby berbeza, jadi ikut pemeriksaan klinik. Hingga minggu 19 diukur kepala ke punggung, selepas itu kepala ke tumit.</p>
+</section>
+
+<!-- UBAT -->
+<section class="page" id="meds">
+  <h1>Ubat & Suplemen</h1>
+  <p>Tandakan selepas diambil. Senarai disusun ikut masa.</p>
+  <div class="card">
+    <label for="medDate">Tarikh rekod</label>
+    <input type="date" id="medDate">
+    <div id="medList"></div>
+    <button class="btn secondary full" id="addMedBtn" onclick="openMedForm()">＋ Tambah ubat</button>
+    <div id="medForm" class="hidden">
+      <h2 id="medFormTitle" style="margin-top:12px">Tambah ubat</h2>
+      <label for="medName">Nama ubat</label><input id="medName" placeholder="Contoh: Asid folik" maxlength="60">
+      <div class="fieldrow">
+        <div><label for="medDose">Dos (pilihan)</label><input id="medDose" placeholder="1 biji" maxlength="30"></div>
+        <div><label for="medTime">Masa</label><input id="medTime" type="time" value="08:00"></div>
+      </div>
+      <div class="row" style="margin-top:8px"><button class="btn ghost" onclick="closeMedForm()">Batal</button><button class="btn" onclick="saveMed()">Simpan</button></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🔔 Peringatan ubat</h2>
+    <label class="check"><input id="reminderOn" type="checkbox"> Peringatan semasa app dibuka</label>
+    <p class="status" id="notifStatus"></p>
+    <button class="btn ghost full" id="notifBtn" onclick="enableNotifications()">Benarkan notifikasi</button>
+    <p class="small subtle">Peringatan dalam app hanya berbunyi bila app sedang dibuka.</p>
+  </div>
+
+  <div class="card">
+    <h2>📅 Peringatan walaupun app ditutup</h2>
+    <p>Simpan semua ubat ke kalendar telefon. Kalendar akan berbunyi setiap hari pada masa ubat, walaupun app ini ditutup.</p>
+    <button class="btn full" onclick="exportCalendar()">Simpan ke kalendar telefon</button>
+    <p class="subtle">Selepas fail dimuat turun, buka fail itu dan pilih "Tambah ke kalendar". Jika ubat ditukar, simpan semula.</p>
+  </div>
+</section>
+
+<!-- BERSALIN -->
+<section class="page" id="birth">
+  <h1>Sambut Kelahiran Baby</h1>
+  <p>Animasi akan dibuka bila kandungan cukup 9 bulan 10 hari.</p>
+  <div class="card">
+    <div class="birthScene" id="birthScene"></div>
+    <p class="birthStatus" id="birthStatus"></p>
+    <div class="bar" id="birthBarWrap"><i id="birthBar"></i></div>
+    <button class="btn full" id="birthBtn" onclick="playBirth()">▶ Sambut baby</button>
+    <button class="btn ghost full" id="birthPreview" onclick="playBirth()">👀 Pratonton animasi</button>
+    <button class="btn secondary full hidden" id="birthReset" onclick="resetBirth()">↺ Kembali ke awal</button>
+  </div>
+  <p class="subtle center">Animasi hiasan, bukan panduan proses bersalin. Tarikh sebenar bergantung pada nasihat doktor atau bidan.</p>
+</section>
+
+<!-- PROFIL -->
+<section class="page" id="profile">
+  <h1>Profil & Tetapan</h1>
+  <p>Maklumat ini disimpan dalam telefon ini sahaja.</p>
+  <div class="card">
+    <label for="motherName">Nama ibu</label><input id="motherName" placeholder="Contoh: Aisyah" maxlength="40">
+    <label for="dueDate">Tarikh jangka bersalin (dari klinik)</label><input id="dueDate" type="date">
+    <label for="lmpDate">Tarikh hari pertama haid terakhir (pilihan)</label><input id="lmpDate" type="date">
+    <p class="subtle" id="dueCalc">Jika tarikh jangka kosong, app akan kira dari tarikh haid terakhir (+280 hari). Tarikh dari klinik lebih tepat.</p>
+    <label class="check" style="margin-top:14px"><input type="checkbox" id="soundOn"> Bunyi pop comel</label>
+    <label class="check"><input type="checkbox" id="musicOn"> Muzik piano latar bila buka app</label>
+    <button class="btn full" onclick="saveProfile()">✓ Simpan tetapan</button>
+  </div>
+
+  <div class="card" id="installCard">
+    <h2>📲 Pasang Baby Mama di telefon</h2>
+    <p id="installText">Pasang app ini di skrin utama telefon supaya mudah dibuka dan data lebih selamat.</p>
+    <button class="btn full hidden" id="installBtn" onclick="installApp()">📲 Pasang app</button>
+    <div id="iosSteps" class="hidden">
+      <p><b>Di iPhone (Safari):</b></p>
+      <p>1. Tekan butang <b>Kongsi</b> <span aria-hidden="true">⬆️</span> di bawah skrin<br>2. Pilih <b>"Add to Home Screen"</b> / <b>"Tambah ke Skrin Utama"</b><br>3. Tekan <b>Add</b> / <b>Tambah</b></p>
+    </div>
+    <div id="androidSteps" class="hidden">
+      <p><b>Di Android (Chrome):</b></p>
+      <p>Tekan menu <b>⋮</b> di atas kanan, kemudian pilih <b>"Add to Home screen"</b> atau <b>"Install app"</b>.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>💾 Data & backup</h2>
+    <p class="status" id="saveStatus" style="color:var(--sage)">✓ Data disimpan automatik dalam telefon ini setiap kali ada perubahan.</p>
+    <p>Data hanya ada dalam telefon ini (tiada akaun, tiada server). Jika history browser dipadam, app dibuang atau tukar telefon, rekod akan hilang. Simpan backup sekali-sekala.</p>
+    <button class="btn secondary full" onclick="exportData()">⬇ Muat turun backup</button>
+    <button class="btn ghost full" onclick="$('importFile').click()">⬆ Pulihkan dari backup</button>
+    <input type="file" id="importFile" accept="application/json,.json" class="hidden">
+    <button class="btn danger full" onclick="resetData()">Padam semua data</button>
+  </div>
+</section>
+</main>
+
+<nav class="nav">
+  <button class="active" data-page="home"><span>⌂</span>Utama</button>
+  <button data-page="kicks"><span>👣</span>Tendangan</button>
+  <button data-page="growth"><span>♡</span>Baby</button>
+  <button data-page="meds"><span>💊</span>Ubat</button>
+  <button data-page="birth"><span>✨</span>Bersalin</button>
+  <button data-page="profile"><span>⚙</span>Profil</button>
+</nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div>
+
+<script>
+/* ---------- Utiliti ---------- */
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, '0');
+const iso = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+const todayISO = () => iso(new Date());
+const hmOf = d => pad(d.getHours()) + ':' + pad(d.getMinutes());
+const nowHM = () => hmOf(new Date());
+const parseISO = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const addDays = (s, n) => { const d = parseISO(s); d.setDate(d.getDate() + n); return iso(d); };
+const diffDays = (a, b) => Math.round((parseISO(b) - parseISO(a)) / 86400000);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmtDate = (s, opt = { day: 'numeric', month: 'short', year: 'numeric' }) => parseISO(s).toLocaleDateString('ms-MY', opt);
+const dayName = s => s ? parseISO(s).toLocaleDateString('ms-MY', { weekday: 'long' }) : '';
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const clone = o => JSON.parse(JSON.stringify(o));
+const period = t => { const h = +t.split(':')[0]; return h < 12 ? 'Pagi' : h < 19 ? 'Petang' : 'Malam'; };
+
+/* ---------- Data ---------- */
+const KEY = 'temanIbu';
+const DEFAULT = {
+  v: 2, name: '', due: '', lmp: '', sound: true, music: true, reminders: true,
+  kicks: [], sessions: [], active: null, checks: {}, sent: {},
+  meds: [
+    { id: 'm0', name: 'Vitamin pranatal', dose: '1 biji', time: '08:00' },
+    { id: 'm1', name: 'Zat besi', dose: '1 biji', time: '14:00' },
+    { id: 'm2', name: 'Kalsium', dose: '1 biji', time: '21:00' }
+  ]
+};
+
+// Tukar data versi 1 (ubat ikut nombor urutan) ke versi 2 (ubat ada id sendiri)
+function migrate(d) {
+  if (d && d.v === 2) return Object.assign(clone(DEFAULT), d);
+  const out = clone(DEFAULT);
+  if (!d) return out;
+  out.name = d.name || ''; out.due = d.due || ''; out.lmp = d.lmp || '';
+  out.kicks = (d.kicks || []).filter(k => k.date && k.time).map(k => ({ id: String(k.id || uid()), date: k.date, time: k.time }));
+  if (Array.isArray(d.meds)) out.meds = d.meds.map((m, i) => ({ id: 'm' + i, name: m.name || 'Ubat', dose: '', time: m.time || '08:00' }));
+  Object.entries(d.checks || {}).forEach(([k, v]) => {
+    const m = k.match(/^(\d{4}-\d{2}-\d{2})_(\d+)$/);
+    if (m && v && out.meds[+m[2]]) out.checks[m[1] + '|' + out.meds[+m[2]].id] = true;
+  });
+  return out;
+}
+function load() {
+  let raw = null;
+  try { raw = localStorage.getItem(KEY); } catch (e) {}
+  try { return migrate(raw ? JSON.parse(raw) : null); } catch (e) { return clone(DEFAULT); }
+}
+let data = load();
+function persist() {
+  try { localStorage.setItem(KEY, JSON.stringify(data)); }
+  catch (e) { toast('Tak dapat simpan. Storan browser penuh atau disekat.'); }
+}
+
+/* ---------- Bunyi & toast ---------- */
+let actx = null;
+function pop() {
+  if (!data.sound) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === 'suspended') actx.resume();
+    const t = actx.currentTime, o = actx.createOscillator(), g = actx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(700, t); o.frequency.exponentialRampToValueAtTime(1100, t + .07);
+    g.gain.setValueAtTime(.08, t); g.gain.exponentialRampToValueAtTime(.001, t + .13);
+    o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + .14);
+  } catch (e) {}
+}
+let toastTimer;
+function toast(t) {
+  const el = $('toast'); el.textContent = t; el.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+}
+
+/* ---------- Muzik piano latar ----------
+   Lagu piano lembut asal, dimainkan terus oleh browser (tiada fail muzik, tiada isu hak cipta).
+   Browser tidak benarkan bunyi sebelum pengguna sentuh skrin, jadi muzik mula pada sentuhan pertama. */
+const Music = (() => {
+  const BEAT = 60 / 66, EIGHTH = BEAT / 2;
+  const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+  // Progresi: C – G/B – Am – F – C – G – F – G7
+  const CH = [
+    { b: 48, a: [55, 60, 64, 67] }, { b: 47, a: [55, 59, 62, 67] }, { b: 45, a: [57, 60, 64, 69] }, { b: 41, a: [57, 60, 65, 69] },
+    { b: 48, a: [55, 60, 64, 67] }, { b: 43, a: [55, 59, 62, 67] }, { b: 41, a: [57, 60, 65, 69] }, { b: 43, a: [55, 59, 62, 65] }
+  ];
+  const PAT = [0, 1, 2, 3, 2, 3, 1, 2];
+  // Melodi [rentak, nota, panjang(rentak)]
+  const MEL = [
+    [[0, 76, 1.5], [1.5, 74, .5], [2, 72, 2]], [[0, 74, 1.5], [1.5, 72, .5], [2, 71, 1], [3, 74, 1]],
+    [[0, 72, 2], [2, 76, 2]], [[0, 77, 3], [3, 76, 1]],
+    [[0, 79, 1.5], [1.5, 77, .5], [2, 76, 2]], [[0, 74, 1.5], [1.5, 76, .5], [2, 74, 2]],
+    [[0, 72, 1], [1, 74, 1], [2, 77, 2]], [[0, 74, 4]]
+  ];
+  let ctx, master, wet, filt, timer = null, next = 0, step = 0, loop = 0, playing = false;
+  function setup() {
+    ctx = actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    master = ctx.createGain(); master.gain.value = 0;
+    filt = ctx.createBiquadFilter(); filt.type = 'lowpass'; filt.frequency.value = 2600;
+    const len = Math.floor(ctx.sampleRate * 2.6), ir = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (let c = 0; c < 2; c++) { const d = ir.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3); }
+    const rev = ctx.createConvolver(); rev.buffer = ir; wet = ctx.createGain(); wet.gain.value = .32;
+    filt.connect(master); filt.connect(wet); wet.connect(rev); rev.connect(master); master.connect(ctx.destination);
+  }
+  function note(m, t, vel, dur) {
+    const f = mtof(m), g = ctx.createGain();
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vel, t + .01);
+    g.gain.exponentialRampToValueAtTime(vel * .35, t + .4); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    g.connect(filt);
+    [[1, 1, 'sine'], [2, .28, 'sine'], [3, .07, 'triangle']].forEach(([h, a, type]) => {
+      const o = ctx.createOscillator(), og = ctx.createGain();
+      o.type = type; o.frequency.value = f * h; o.detune.value = (Math.random() - .5) * 4; og.gain.value = a;
+      o.connect(og); og.connect(g); o.start(t); o.stop(t + dur + .05);
+    });
+  }
+  function playStep(s, t) {
+    const bar = Math.floor(s / 8), e = s % 8, ch = CH[bar];
+    if (e === 0) note(ch.b, t, .30, 3.2);
+    if (e === 4) note(ch.b + 7, t, .16, 2.2);
+    note(ch.a[PAT[e]], t, e % 2 ? .10 : .14, 1.8);
+    if (loop % 3 !== 0) MEL[bar].forEach(([b, m, l]) => { if (b * 2 === e) note(m, t, .26, l * BEAT + 1.2); });
+  }
+  function schedule() {
+    while (next < ctx.currentTime + 1.2) {
+      playStep(step, next); next += EIGHTH;
+      if (++step >= 64) { step = 0; loop++; }
+    }
+  }
+  return {
+    get playing() { return playing; },
+    start() {
+      if (playing) return;
+      try {
+        if (!master) setup();
+        if (ctx.state === 'suspended') ctx.resume();
+        playing = true; step = 0; loop = 0; next = ctx.currentTime + .15;
+        master.gain.cancelScheduledValues(ctx.currentTime);
+        master.gain.setValueAtTime(master.gain.value, ctx.currentTime);
+        master.gain.linearRampToValueAtTime(.17, ctx.currentTime + 3);
+        schedule(); timer = setInterval(schedule, 250);
+      } catch (e) { playing = false; }
+    },
+    stop() {
+      if (!playing) return;
+      playing = false; clearInterval(timer); timer = null;
+      const t = ctx.currentTime;
+      master.gain.cancelScheduledValues(t); master.gain.setValueAtTime(master.gain.value, t); master.gain.linearRampToValueAtTime(0, t + .6);
+    }
+  };
+})();
+function renderMusicBtn() {
+  const b = $('musicBtn'); b.textContent = Music.playing ? '🎵' : '🔇';
+  b.title = b.ariaLabel = Music.playing ? 'Matikan muzik' : 'Mainkan muzik';
+  b.style.opacity = Music.playing ? 1 : .6;
+}
+function toggleMusic() {
+  if (Music.playing) { Music.stop(); data.music = false; toast('Muzik dimatikan'); }
+  else { Music.start(); data.music = true; toast('🎹 Muzik piano dimainkan'); }
+  persist(); renderMusicBtn(); if ($('musicOn')) $('musicOn').checked = data.music;
+}
+// Mula muzik pada sentuhan pertama (syarat browser). Abaikan jika sentuhan pertama ialah butang muzik itu sendiri.
+function firstTouch(e) {
+  document.removeEventListener('pointerdown', firstTouch, true);
+  if (e.target.closest && e.target.closest('#musicBtn')) return;
+  if (data.music) { Music.start(); renderMusicBtn(); }
+}
+document.addEventListener('pointerdown', firstTouch, true);
+
+/* ---------- Ilustrasi ---------- */
+/* Ibu mengandung (pandangan sisi) dengan "tingkap" pada perut menunjukkan baby tersenyum */
+const BELLY_SVG = `<svg viewBox="0 0 320 236" role="img" aria-label="Ilustrasi ibu mengandung dengan baby comel tersenyum dalam perut">
+  <circle cx="62" cy="58" r="30" fill="#fff" opacity=".55"/><circle cx="276" cy="44" r="18" fill="#fff" opacity=".55"/>
+  <text x="44" y="180" font-size="16" fill="#e2aeb2">✦</text><text x="282" y="206" font-size="12" fill="#e2aeb2">✦</text>
+  <g class="mom">
+    <ellipse cx="117" cy="74" rx="36" ry="40" fill="#7a5150"/>
+    <circle cx="93" cy="44" r="16" fill="#7a5150"/>
+    <path d="M98 108 Q127 98 154 108 L164 160 L162 236 L80 236 L86 160 Z" fill="#d98a94"/>
+    <path d="M86 214 Q122 224 162 214 L162 236 L80 236Z" fill="#c97682"/>
+    <g class="belly">
+      <circle cx="180" cy="160" r="60" fill="#d98a94"/>
+      <circle class="bulge" cx="238" cy="156" r="14" fill="#d98a94"/>
+      <circle cx="181" cy="160" r="46" fill="#fff3ef" stroke="#fbe3df" stroke-width="5"/>
+      <circle cx="181" cy="160" r="37" fill="#fde2db" opacity=".75"/>
+      <path d="M150 140 q8 -14 24 -16" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".8"/>
+      <g transform="translate(182 164)"><g class="babyBob">
+        <g stroke="#e7a99c" stroke-width="1.6">
+          <ellipse cx="6" cy="8" rx="20" ry="16" fill="#ffcfb8"/>
+          <g class="leg"><ellipse cx="19" cy="14" rx="11" ry="7" fill="#ffc2a6"/><ellipse cx="28" cy="7" rx="6" ry="5" fill="#ffc2a6"/></g>
+          <ellipse cx="-3" cy="11" rx="7" ry="5" fill="#ffc2a6"/>
+          <circle cx="-14" cy="-11" r="17" fill="#ffdcc8"/>
+        </g>
+        <path d="M-17 -27 q6 -7 5 3" stroke="#c9837f" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="-23" cy="-5" r="3.6" fill="#f59fa0" opacity=".75"/><circle cx="-5" cy="-5" r="3.6" fill="#f59fa0" opacity=".75"/>
+        <path d="M-23 -13 q3 -3.5 6 0M-11 -13 q3 -3.5 6 0" stroke="#7a5052" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M-18 -5 q4 5 8 0" stroke="#7a5052" stroke-width="2" fill="#f28d96" stroke-linecap="round"/>
+      </g></g>
+    </g>
+    <path d="M106 114 Q100 176 138 198" stroke="#d98a94" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <circle cx="142" cy="199" r="8" fill="#f8d9c6"/>
+    <rect x="119" y="90" width="16" height="20" rx="7" fill="#f3c9b4"/>
+    <circle cx="129" cy="70" r="27" fill="#f8d9c6"/>
+    <path d="M102 66 Q106 38 136 40 Q154 42 157 60 Q140 50 120 56 Q108 60 102 66Z" fill="#7a5150"/>
+    <circle cx="121" cy="81" r="4.5" fill="#f4a9a9" opacity=".7"/><circle cx="149" cy="81" r="4.5" fill="#f4a9a9" opacity=".7"/>
+    <g class="momHappy" stroke="#6b4547" stroke-width="2.2" fill="none" stroke-linecap="round">
+      <path d="M121 71 q4 -4 8 0M140 71 q4 -4 8 0"/><path d="M130 85 q5 5 10 0"/>
+    </g>
+    <g class="momWow" fill="#6b4547">
+      <circle cx="125" cy="70" r="2.8"/><circle cx="144" cy="70" r="2.8"/><ellipse cx="135" cy="87" rx="3" ry="3.6"/>
+    </g>
+  </g>
+  <g class="impact" stroke="#e07e8a" stroke-width="3" stroke-linecap="round">
+    <path d="M258 140 l10 -7M261 156 l13 0M258 172 l10 7"/>
+    <text x="250" y="126" font-size="15" font-weight="800" fill="#c45f6c" stroke="none">dush!</text>
+  </g>
+  <path class="heart h1" d="M226 92c0-6 8-8 10-2 2-6 10-4 10 2 0 7-10 12-10 12s-10-5-10-12z" fill="#e58f99"/>
+  <path class="heart h2" d="M252 104c0-4 6-6 7-1 1-5 7-3 7 1 0 5-7 9-7 9s-7-4-7-9z" fill="#f0b3b8"/>
+  <path class="heart h3" d="M190 96c0-4 6-6 7-1 1-5 7-3 7 1 0 5-7 9-7 9s-7-4-7-9z" fill="#e58f99"/>
+</svg>`;
+const BELLY_HTML = BELLY_SVG + '<span class="hint">Sentuh perut untuk sapa baby 👆</span>';
+function animateKick() {
+  document.querySelectorAll('.bellyArt').forEach(el => { el.classList.remove('kicking'); void el.offsetWidth; el.classList.add('kicking'); });
+}
+function kickSound() {
+  if (!data.sound) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === 'suspended') actx.resume();
+    const t = actx.currentTime + .25, o = actx.createOscillator(), g = actx.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(170, t); o.frequency.exponentialRampToValueAtTime(70, t + .16);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.3, t + .015); g.gain.exponentialRampToValueAtTime(.0001, t + .22);
+    o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + .25);
+  } catch (e) {}
+}
+const BABY_MSGS = ['Dush! Baby sepak perut ibu 💕', 'Baby kata: hai ibu! 🤍', 'Baby aktif hari ini 👣', 'Baby senyum dengar suara ibu 😊'];
+let msgIdx = 0;
+// Sentuh gambar = animasi sahaja (tidak direkod). Butang "+1" yang merekod tendangan.
+function tapBaby() {
+  animateKick(); kickSound(); toast(BABY_MSGS[msgIdx++ % BABY_MSGS.length]);
+}
+
+/* ---------- Navigasi ---------- */
+function go(page) {
+  document.querySelectorAll('.nav button').forEach(x => x.classList.toggle('active', x.dataset.page === page));
+  document.querySelectorAll('.page').forEach(x => x.classList.toggle('active', x.id === page));
+  if (page === 'growth') { const p = preg(); if (p && p.week >= 4 && p.week <= 40) setWeek(p.week, true); }
+  window.scrollTo(0, 0); pop();
+}
+
+/* ---------- Kehamilan ---------- */
+function dueDate() { return data.due || (data.lmp ? addDays(data.lmp, 280) : ''); }
+function preg() {
+  const due = dueDate(); if (!due) return null;
+  const left = diffDays(todayISO(), due), gd = 280 - left;
+  return { due, left, gd, week: Math.floor(gd / 7), day: ((gd % 7) + 7) % 7, tri: gd < 98 ? 1 : gd < 196 ? 2 : 3 };
+}
+
+/* Saiz baby ikut minggu: [emoji, perbandingan, panjang, berat] */
+const SIZES = {
+  4: ['🌱', 'biji popi', '0.1 cm', '< 1 g'], 5: ['✨', 'biji bijan', '0.2 cm', '< 1 g'], 6: ['🫘', 'kacang dal', '0.6 cm', '< 1 g'],
+  7: ['🫐', 'beri biru', '1.3 cm', '< 1 g'], 8: ['🍒', 'buah ceri', '1.6 cm', '1 g'], 9: ['🍇', 'biji anggur', '2.3 cm', '2 g'],
+  10: ['🍓', 'strawberi', '3.1 cm', '4 g'], 11: ['🌰', 'buah berangan', '4.1 cm', '7 g'], 12: ['🍋', 'limau nipis', '5.4 cm', '14 g'],
+  13: ['🍑', 'buah pic', '7.4 cm', '23 g'], 14: ['🍋', 'lemon', '8.7 cm', '43 g'], 15: ['🍎', 'epal', '10.1 cm', '70 g'],
+  16: ['🥑', 'avokado', '11.6 cm', '100 g'], 17: ['🍐', 'buah pear', '13 cm', '140 g'], 18: ['🍠', 'keledek', '14.2 cm', '190 g'],
+  19: ['🥭', 'mangga', '15.3 cm', '240 g'], 20: ['🍌', 'pisang', '25.6 cm', '300 g'], 21: ['🥕', 'lobak merah', '26.7 cm', '360 g'],
+  22: ['🌽', 'jagung', '27.8 cm', '430 g'], 23: ['🍊', 'limau bali', '28.9 cm', '500 g'], 24: ['🥦', 'kubis bunga', '30 cm', '600 g'],
+  25: ['🥬', 'sawi besar', '34.6 cm', '660 g'], 26: ['🥬', 'daun salad', '35.6 cm', '760 g'], 27: ['🥦', 'brokoli besar', '36.6 cm', '875 g'],
+  28: ['🍆', 'terung', '37.6 cm', '1 kg'], 29: ['🎃', 'labu kecil', '38.6 cm', '1.2 kg'], 30: ['🥬', 'kubis', '39.9 cm', '1.3 kg'],
+  31: ['🥥', 'kelapa', '41.1 cm', '1.5 kg'], 32: ['🥔', 'sengkuang', '42.4 cm', '1.7 kg'], 33: ['🍍', 'nanas', '43.7 cm', '1.9 kg'],
+  34: ['🍈', 'tembikai susu', '45 cm', '2.1 kg'], 35: ['🍈', 'tembikai wangi', '46.2 cm', '2.4 kg'], 36: ['🍈', 'betik besar', '47.4 cm', '2.6 kg'],
+  37: ['🍈', 'kundur', '48.6 cm', '2.9 kg'], 38: ['🎃', 'labu besar', '49.8 cm', '3.1 kg'], 39: ['🍉', 'tembikai kecil', '50.7 cm', '3.3 kg'],
+  40: ['🍉', 'tembikai', '51.2 cm', '3.5 kg']
+};
+function milestone(w) {
+  if (w <= 5) return 'Kehamilan baru bermula. Sel-sel baby sedang membina asas tubuhnya.';
+  if (w <= 8) return 'Jantung kecil baby mula berdenyut dan wajahnya mula terbentuk.';
+  if (w <= 12) return 'Jari tangan dan kaki mula terbentuk. Baby sudah bergerak walaupun ibu belum rasa.';
+  if (w <= 16) return 'Baby boleh membuat mimik muka dan mula menggenggam tangan.';
+  if (w <= 20) return 'Ramai ibu mula rasa gerakan pertama baby sekitar minggu-minggu ini.';
+  if (w <= 24) return 'Baby mula boleh mendengar bunyi. Cuba bercakap, berzikir atau mengaji untuk baby.';
+  if (w <= 28) return 'Baby boleh membuka dan menutup mata, dan ada waktu tidur dan bangun sendiri.';
+  if (w <= 32) return 'Baby semakin berisi. Kenal corak gerakan baby kerana setiap baby berbeza.';
+  if (w <= 36) return 'Paru-paru dan otak baby semakin matang. Ruang dalam rahim semakin sempit.';
+  return 'Baby hampir cukup bulan dan bersedia bertemu ibu. Bincang tanda-tanda bersalin dengan doktor atau bidan.';
+}
+
+/* ---------- Utama ---------- */
+function renderHome() {
+  $('hello').textContent = (data.name || 'Ibu Sayang') + ' 🤍';
+  const p = preg(), card = $('pregCard');
+  if (!p) {
+    card.innerHTML = `<h2>Mulakan di sini 🌷</h2><p>Masukkan tarikh jangka bersalin untuk lihat minggu kandungan dan kiraan hari.</p><button class="btn secondary" style="margin-top:8px" onclick="go('profile')">Tetapkan tarikh</button>`;
+  } else if (p.gd < 0) {
+    card.innerHTML = `<h2>Semak tarikh</h2><p>Tarikh jangka bersalin lebih 40 minggu dari hari ini. Sila semak di Profil.</p><button class="btn secondary" style="margin-top:8px" onclick="go('profile')">Buka Profil</button>`;
+  } else {
+    const s = SIZES[Math.min(40, Math.max(4, p.week))];
+    const chip = p.week >= 4 ? `<button class="sizechip" onclick="go('growth')"><span>${s[0]}</span>sebesar ${esc(s[1])}</button>` : '';
+    const leftTxt = p.left > 0 ? `Lagi <b>${p.left} hari</b> ke tarikh jangka bersalin`
+      : p.left === 0 ? `<b>Hari ini</b> tarikh jangka bersalin 🤍`
+      : `Sudah <b>${-p.left} hari</b> melepasi tarikh jangka. Ikut nasihat doktor atau bidan.`;
+    card.innerHTML = `<div class="pregtop"><div><small>Usia kandungan</small><strong>Minggu ${p.week}</strong><span>+${p.day} hari · Trimester ${p.tri}</span></div>${chip}</div>
+      <div class="bar"><i style="width:${Math.min(100, p.gd / 280 * 100).toFixed(1)}%"></i></div>
+      <p>${leftTxt}<br><span class="subtle">Tarikh jangka: ${fmtDate(p.due)}${data.due ? '' : ' (anggaran dari haid terakhir)'}</span></p>`;
+  }
+  const t = todayISO(), today = data.kicks.filter(k => k.date === t).sort((a, b) => b.time.localeCompare(a.time));
+  $('todayCount').textContent = today.length + ' kali';
+  $('lastKick').textContent = today.length ? 'Terakhir ' + today[0].time : 'Belum ada rekod';
+  const n = nextMed();
+  $('nextMed').textContent = n ? n.med.name : (data.meds.length ? 'Selesai hari ini ✓' : 'Belum ditetapkan');
+  $('nextMedTime').innerHTML = n ? esc(n.med.time) + (n.late ? ' · <span style="color:var(--warn)">belum diambil</span>' : '') : '';
+  renderBirth();
+}
+
+/* ---------- Tendangan ---------- */
+function addKick() {
+  const d = new Date();
+  data.kicks.push({ id: uid(), date: iso(d), time: hmOf(d) });
+  const a = data.active;
+  if (a) {
+    a.count++;
+    if (a.count === KICK_GOAL) a.t10 = Math.max(1, Math.round((Date.now() - a.start) / 60000));
+  }
+  persist(); pop(); animateKick();
+  if (a && a.count >= KICK_MAX) finishSession(true);
+  else if (a && a.count === KICK_GOAL) toast(`🎉 Cukup ${KICK_GOAL} tendangan dalam ${a.t10} minit! Boleh teruskan hingga ${KICK_MAX}`);
+  else toast(a ? `👣 ${a.count} / ${KICK_MAX}` : '👣 Tendangan direkod ' + hmOf(d));
+  renderKicks(); renderSession(); renderHome();
+}
+function saveKick() {
+  const date = $('kickDate').value, time = $('kickTime').value;
+  if (!date || !time) { toast('Pilih tarikh dan masa dahulu'); return; }
+  if (date > todayISO() || (date === todayISO() && time > nowHM())) { toast('Masa itu belum berlaku'); return; }
+  data.kicks.push({ id: uid(), date, time }); persist(); pop();
+  $('filterDate').value = date; $('filterDay').value = dayName(date);
+  renderKicks(); renderHome(); toast('Rekod tendangan disimpan ✓');
+}
+function delKick(id) {
+  data.kicks = data.kicks.filter(x => x.id !== id); persist(); renderKicks(); renderHome(); toast('Rekod dipadam');
+}
+function renderKicks() {
+  const f = $('filterDate').value;
+  const list = data.kicks.filter(x => !f || x.date === f).sort((a, b) => b.time.localeCompare(a.time));
+  $('daySum').textContent = f ? `${list.length} tendangan pada ${dayName(f)}, ${fmtDate(f)}` : '';
+  $('kickList').innerHTML = list.length ? list.map(x => `<div class="log"><span>👣 ${esc(x.time)} <span class="subtle">· ${period(x.time)}</span></span><button class="iconbtn" onclick="delKick('${esc(x.id)}')" aria-label="Padam rekod ${esc(x.time)}">×</button></div>`).join('')
+    : '<p>Belum ada rekod untuk tarikh ini.</p>';
+  const s = data.sessions;
+  $('sessionList').innerHTML = s.length ? s.slice(0, 10).map(x => `<div class="log"><span>${dayName(x.date)}, ${fmtDate(x.date, { day: 'numeric', month: 'short' })}<br><span class="subtle">Mula ${esc(x.start)}</span></span>${sessionPill(x)}</div>`).join('')
+    : '<p>Belum ada sesi. Mulakan sesi kiraan di atas.</p>';
+}
+
+/* Sesi kiraan: wajib 10 tendangan, boleh teruskan hingga 20 */
+const KICK_GOAL = 10, KICK_MAX = 20;
+const BELLY_DIV = `<div class="bellyArt" role="button" tabindex="0" aria-label="Sentuh untuk lihat baby menendang" onclick="tapBaby()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();tapBaby()}">${BELLY_HTML}</div>`;
+function startSession() { data.active = { start: Date.now(), count: 0, t10: null }; persist(); pop(); renderSession(); }
+function finishSession(auto) {
+  const a = data.active; if (!a) return;
+  const mins = Math.max(1, Math.round((Date.now() - a.start) / 60000));
+  if (a.count > 0) {
+    const st = new Date(a.start);
+    data.sessions.unshift({ id: uid(), date: iso(st), start: hmOf(st), mins, count: a.count, t10: a.t10 ?? null });
+    data.sessions = data.sessions.slice(0, 60);
+  }
+  data.active = null; persist(); renderSession(); renderKicks();
+  if (!a.count) toast('Sesi dibatalkan');
+  else if (auto) toast(`🎉 ${KICK_MAX} tendangan! Sesi disimpan`);
+  else if (a.count < KICK_GOAL) toast(`Sesi disimpan: ${a.count} tendangan, belum cukup ${KICK_GOAL}`);
+  else toast('Sesi disimpan ✓');
+}
+function sessionPill(x) {
+  const t10 = x.t10 ?? (x.count >= KICK_GOAL ? x.mins : null);
+  return x.count >= KICK_GOAL
+    ? `<span class="pill">${x.count} tendangan · 10 dalam ${t10} min</span>`
+    : `<span class="pill late">${x.count} tendangan · belum cukup 10</span>`;
+}
+function renderSession() {
+  const a = data.active, el = $('sessionCard');
+  if (!a) {
+    el.innerHTML = `${BELLY_DIV}
+      <button class="tapbig" onclick="addKick()"><div><span>👣</span>+1 Tendangan</div></button>
+      <h2 style="margin-top:12px">Sesi kiraan tendangan</h2>
+      <p>Wajib capai <b>${KICK_GOAL} tendangan</b>. Jika baby masih aktif, boleh teruskan sehingga ${KICK_MAX}.</p>
+      <button class="btn secondary full" onclick="startSession()">▶ Mula sesi kiraan</button>`;
+    return;
+  }
+  const done = a.count >= KICK_GOAL;
+  const dots = (from, to, cls) => `<div class="dots ${cls}">${Array.from({ length: to - from }, (_, i) => `<i class="${from + i < a.count ? 'on' : ''}"></i>`).join('')}</div>`;
+  el.innerHTML = `${BELLY_DIV}
+    <h2>Sesi sedang berjalan</h2>
+    <div class="count">${a.count} <small>/ ${KICK_MAX}</small></div>
+    <div class="timer" id="sessTimer">00:00</div>
+    <p class="goal ${done ? 'ok' : ''}">${done ? `✓ Wajib ${KICK_GOAL} tercapai dalam ${a.t10} minit` : `Wajib ${KICK_GOAL} · lagi ${KICK_GOAL - a.count} tendangan`}</p>
+    <div class="dotrow"><small>Wajib</small>${dots(0, KICK_GOAL, '')}</div>
+    <div class="dotrow"><small>Tambahan</small>${dots(KICK_GOAL, KICK_MAX, 'extra')}</div>
+    <button class="tapbig" onclick="addKick()"><div><span>👣</span>+1 Tendangan</div></button>
+    <button class="btn ${done ? '' : 'ghost'} full" onclick="finishSession(false)">${done ? '✓ Selesai & simpan' : 'Tamatkan sesi'}</button>`;
+  tickSession();
+}
+function tickSession() {
+  const el = $('sessTimer'); if (!el || !data.active) return;
+  const s = Math.floor((Date.now() - data.active.start) / 1000);
+  el.textContent = (s >= 3600 ? Math.floor(s / 3600) + ':' : '') + pad(Math.floor(s / 60) % 60) + ':' + pad(s % 60);
+}
+
+/* ---------- Perkembangan baby ---------- */
+let curWeek = 12;
+function setWeek(w, silent) {
+  w = Math.min(40, Math.max(4, w)); curWeek = w;
+  const s = SIZES[w], p = preg();
+  $('wkTitle').textContent = 'Minggu ' + w;
+  $('wkTag').classList.toggle('hidden', !(p && p.week === w));
+  $('fruit').textContent = s[0];
+  $('fruit').style.fontSize = (52 + (w - 4) * 2.2) + 'px';
+  $('fruitName').textContent = 'Sebesar ' + s[1];
+  $('wkLen').textContent = '± ' + s[2];
+  $('wkWt').textContent = s[3].startsWith('<') ? s[3] : '± ' + s[3];
+  $('wkRange').value = w;
+  $('wkNote').textContent = milestone(w);
+  $('growthIntro').textContent = p && p.week >= 4 && p.week <= 40 ? `Ibu kini di minggu ${p.week}. Leret untuk lihat minggu lain.` : 'Lihat saiz baby minggu demi minggu.';
+  if (!silent) pop();
+}
+
+/* ---------- Ubat ---------- */
+const sortedMeds = () => [...data.meds].sort((a, b) => a.time.localeCompare(b.time));
+function nextMed() {
+  const t = todayISO(), hm = nowHM();
+  const pending = sortedMeds().filter(m => !data.checks[t + '|' + m.id]);
+  if (!pending.length) return null;
+  const late = pending.filter(m => m.time < hm);
+  return late.length ? { med: late[0], late: true } : { med: pending[0], late: false };
+}
+function renderMeds() {
+  const date = $('medDate').value || todayISO(), isToday = date === todayISO(), hm = nowHM();
+  const meds = sortedMeds();
+  $('medList').innerHTML = meds.length ? meds.map(m => {
+    const key = date + '|' + m.id, done = !!data.checks[key];
+    const late = isToday && !done && m.time < hm;
+    return `<div class="medicine ${done ? 'done' : ''}">
+      <input type="checkbox" ${done ? 'checked' : ''} aria-label="Tanda ${esc(m.name)} sudah diambil" onchange="checkMed('${esc(m.id)}',this.checked)">
+      <div><b>${esc(m.name)}</b><div class="medtime">${esc(m.time)}${m.dose ? ' · ' + esc(m.dose) : ''}</div></div>
+      <span class="pill ${late ? 'late' : ''}">${late ? 'Belum ambil' : period(m.time)}</span>
+      <div class="medact"><button class="iconbtn" onclick="openMedForm('${esc(m.id)}')" aria-label="Ubah ${esc(m.name)}">✎</button><button class="iconbtn" onclick="delMed('${esc(m.id)}')" aria-label="Padam ${esc(m.name)}">×</button></div>
+    </div>`;
+  }).join('') : '<p>Belum ada ubat. Tekan "Tambah ubat".</p>';
+}
+function checkMed(id, v) {
+  const key = ($('medDate').value || todayISO()) + '|' + id;
+  if (v) data.checks[key] = true; else delete data.checks[key];
+  persist(); pop(); renderMeds(); renderHome(); toast(v ? 'Ubat ditanda sudah diambil ✓' : 'Tanda dibuang');
+}
+let editingMed = null;
+function openMedForm(id) {
+  editingMed = id || null;
+  const m = data.meds.find(x => x.id === id);
+  $('medFormTitle').textContent = m ? 'Ubah ubat' : 'Tambah ubat';
+  $('medName').value = m ? m.name : ''; $('medDose').value = m ? m.dose : ''; $('medTime').value = m ? m.time : '08:00';
+  $('medForm').classList.remove('hidden'); $('addMedBtn').classList.add('hidden'); $('medName').focus();
+}
+function closeMedForm() { editingMed = null; $('medForm').classList.add('hidden'); $('addMedBtn').classList.remove('hidden'); }
+function saveMed() {
+  const name = $('medName').value.trim(), dose = $('medDose').value.trim(), time = $('medTime').value;
+  if (!name) { toast('Masukkan nama ubat'); return; }
+  if (!time) { toast('Pilih masa ubat'); return; }
+  const m = data.meds.find(x => x.id === editingMed);
+  if (m) Object.assign(m, { name, dose, time }); else data.meds.push({ id: uid(), name, dose, time });
+  persist(); pop(); closeMedForm(); renderMeds(); renderHome(); toast(m ? 'Ubat dikemas kini ✓' : 'Ubat ditambah ✓');
+}
+function delMed(id) {
+  const m = data.meds.find(x => x.id === id); if (!m) return;
+  if (!confirm(`Padam "${m.name}" dari senarai?`)) return;
+  data.meds = data.meds.filter(x => x.id !== id);
+  Object.keys(data.checks).forEach(k => { if (k.endsWith('|' + id)) delete data.checks[k]; });
+  persist(); renderMeds(); renderHome(); toast('Ubat dipadam');
+}
+
+/* Notifikasi */
+const hasNotif = () => typeof window.Notification !== 'undefined';
+function renderNotif() {
+  $('reminderOn').checked = !!data.reminders;
+  const st = $('notifStatus'), btn = $('notifBtn');
+  if (!hasNotif()) { st.textContent = 'Browser ini tak sokong notifikasi. Guna kalendar telefon di bawah.'; btn.classList.add('hidden'); return; }
+  const p = Notification.permission;
+  st.textContent = p === 'granted' ? '✓ Notifikasi dibenarkan' : p === 'denied' ? 'Notifikasi disekat. Benarkan dalam tetapan browser.' : 'Notifikasi belum dibenarkan.';
+  st.style.color = p === 'granted' ? 'var(--sage)' : 'var(--muted)';
+  btn.classList.toggle('hidden', p !== 'default');
+}
+function enableNotifications() {
+  if (!hasNotif()) { toast('Browser ini tidak menyokong notifikasi'); return; }
+  Notification.requestPermission().then(p => { renderNotif(); toast(p === 'granted' ? 'Notifikasi dibenarkan ✓' : 'Kebenaran notifikasi belum diberi'); });
+}
+let lastDay = todayISO();
+function checkReminders() {
+  const t = todayISO();
+  if (t !== lastDay) { // lepas tengah malam
+    lastDay = t;
+    Object.keys(data.sent).forEach(k => { if (!k.startsWith(t)) delete data.sent[k]; });
+    renderHome(); renderMeds(); persist();
+  }
+  if (!data.reminders) return;
+  const hm = nowHM();
+  data.meds.forEach(m => {
+    const k = t + '|' + m.id;
+    if (m.time === hm && !data.sent[k] && !data.checks[k]) {
+      data.sent[k] = true; persist(); pop();
+      toast('💊 Masa makan ubat: ' + m.name);
+      if (hasNotif() && Notification.permission === 'granted') {
+        showNotif('Baby Mama', 'Masa makan ubat: ' + m.name + (m.dose ? ' (' + m.dose + ')' : '') + ' 💊');
+      }
+      renderHome();
+    }
+  });
+}
+
+/* Kalendar (.ics) supaya telefon ingatkan walaupun app ditutup */
+function icsText(s) { return String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n'); }
+function download(name, text, type) {
+  const blob = new Blob([text], { type }), url = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+function exportCalendar() {
+  if (!data.meds.length) { toast('Tambah ubat dahulu'); return; }
+  const d = new Date(), stamp = d.toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z', day = todayISO().replace(/-/g, '');
+  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Baby Mama//MS', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH'];
+  sortedMeds().forEach(m => {
+    lines.push('BEGIN:VEVENT', `UID:${m.id}@baby-mama`, `DTSTAMP:${stamp}`,
+      `DTSTART:${day}T${m.time.replace(':', '')}00`, 'DURATION:PT10M', 'RRULE:FREQ=DAILY',
+      `SUMMARY:${icsText('💊 Makan ubat: ' + m.name)}`,
+      `DESCRIPTION:${icsText((m.dose ? 'Dos: ' + m.dose + '. ' : '') + 'Tanda dalam app Baby Mama selepas diambil.')}`,
+      'BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${icsText('Masa makan ubat: ' + m.name)}`, 'TRIGGER:PT0M', 'END:VALARM', 'END:VEVENT');
+  });
+  lines.push('END:VCALENDAR');
+  download('baby-mama-ubat.ics', lines.join('\r\n'), 'text/calendar');
+  toast('Fail kalendar dimuat turun. Buka untuk tambah ✓');
+}
+
+/* ---------- Bersalin (babak 3D) ----------
+   Gaya 3D: gradien bulat + cahaya + bayang pada setiap bentuk. Babak simbolik: cahaya lembut,
+   perut mengecil, dan baby berbedung muncul tersenyum di sebelah ibu. */
+const BIRTH_SVG = `<svg viewBox="0 0 340 300" role="img" aria-label="Ibu mengandung, kemudian baby berbedung tersenyum di sebelah ibu">
+<defs>
+  <radialGradient id="b3skin" cx=".36" cy=".3" r=".8"><stop offset="0" stop-color="#ffeee4"/><stop offset=".6" stop-color="#f6cfb9"/><stop offset="1" stop-color="#dfa088"/></radialGradient>
+  <radialGradient id="b3dress" cx=".32" cy=".28" r=".9"><stop offset="0" stop-color="#f6b9c1"/><stop offset=".55" stop-color="#da8b96"/><stop offset="1" stop-color="#ad5867"/></radialGradient>
+  <radialGradient id="b3hair" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#a5716e"/><stop offset=".65" stop-color="#6d4544"/><stop offset="1" stop-color="#4a2c2c"/></radialGradient>
+  <radialGradient id="b3win" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#fffbf9"/><stop offset=".7" stop-color="#fde6e0"/><stop offset="1" stop-color="#f3c6be"/></radialGradient>
+  <radialGradient id="b3baby" cx=".36" cy=".3" r=".85"><stop offset="0" stop-color="#ffece0"/><stop offset=".6" stop-color="#ffcdb6"/><stop offset="1" stop-color="#e9a287"/></radialGradient>
+  <radialGradient id="b3blanket" cx=".32" cy=".28" r=".9"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#fde4ea"/><stop offset="1" stop-color="#e9aebb"/></radialGradient>
+  <radialGradient id="b3cloud" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#f3dfe2"/></radialGradient>
+  <radialGradient id="b3glow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff6c8"/><stop offset=".5" stop-color="#ffd9e0" stop-opacity=".75"/><stop offset="1" stop-color="#ffd9e0" stop-opacity="0"/></radialGradient>
+  <filter id="b3sh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#8a4a55" flood-opacity=".28"/></filter>
+</defs>
+<text class="b3hello" x="170" y="28" text-anchor="middle" font-size="18" font-weight="800" fill="#b95d69">Selamat datang, baby! 🤍</text>
+<ellipse cx="140" cy="290" rx="92" ry="9" fill="#c98f95" opacity=".3"/>
+<g transform="translate(0 52)">
+  <g class="mom" filter="url(#b3sh)">
+    <ellipse cx="117" cy="74" rx="36" ry="40" fill="url(#b3hair)"/>
+    <circle cx="93" cy="44" r="16" fill="url(#b3hair)"/><ellipse cx="88" cy="38" rx="5" ry="3" fill="#fff" opacity=".25"/>
+    <path d="M98 108 Q127 98 154 108 L164 160 L162 240 L80 240 L86 160 Z" fill="url(#b3dress)"/>
+    <g class="b3belly">
+      <circle cx="180" cy="160" r="60" fill="url(#b3dress)"/>
+      <ellipse cx="166" cy="128" rx="22" ry="10" fill="#fff" opacity=".28" transform="rotate(-24 166 128)"/>
+      <circle cx="181" cy="160" r="46" fill="url(#b3win)" stroke="#fbe3df" stroke-width="5"/>
+      <circle class="b3glowc" cx="181" cy="160" r="58" fill="url(#b3glow)"/>
+      <g transform="translate(182 164)"><g class="b3bob">
+        <ellipse cx="6" cy="8" rx="20" ry="16" fill="url(#b3baby)"/>
+        <ellipse cx="19" cy="14" rx="11" ry="7" fill="url(#b3baby)"/><ellipse cx="28" cy="7" rx="6" ry="5" fill="url(#b3baby)"/>
+        <ellipse cx="-3" cy="11" rx="7" ry="5" fill="url(#b3baby)"/>
+        <circle cx="-14" cy="-11" r="17" fill="url(#b3baby)"/><ellipse cx="-19" cy="-19" rx="5" ry="3" fill="#fff" opacity=".5"/>
+        <path d="M-17 -27 q6 -7 5 3" stroke="#c9837f" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="-23" cy="-5" r="3.6" fill="#f59fa0" opacity=".75"/><circle cx="-5" cy="-5" r="3.6" fill="#f59fa0" opacity=".75"/>
+        <path d="M-23 -13 q3 -3.5 6 0M-11 -13 q3 -3.5 6 0" stroke="#7a5052" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M-18 -5 q4 5 8 0" stroke="#7a5052" stroke-width="2" fill="#f28d96" stroke-linecap="round"/>
+      </g></g>
+    </g>
+    <g class="armBefore"><path d="M106 114 Q100 176 138 198" stroke="url(#b3dress)" stroke-width="16" fill="none" stroke-linecap="round"/><circle cx="142" cy="199" r="8" fill="url(#b3skin)"/></g>
+    <g class="armAfter"><path d="M106 114 Q128 190 222 184" stroke="#d6838f" stroke-width="16" fill="none" stroke-linecap="round"/><circle cx="227" cy="183" r="8.5" fill="url(#b3skin)"/></g>
+    <rect x="119" y="90" width="16" height="20" rx="7" fill="#efc2ab"/>
+    <circle cx="129" cy="70" r="27" fill="url(#b3skin)"/><ellipse cx="119" cy="58" rx="8" ry="5" fill="#fff" opacity=".35"/>
+    <path d="M102 66 Q106 38 136 40 Q154 42 157 60 Q140 50 120 56 Q108 60 102 66Z" fill="url(#b3hair)"/>
+    <circle cx="121" cy="81" r="5" fill="#f4a1a3" opacity=".7"/><circle cx="149" cy="81" r="5" fill="#f4a1a3" opacity=".7"/>
+    <g stroke="#6b4547" stroke-width="2.2" fill="none" stroke-linecap="round"><path d="M121 71 q4 -4 8 0M140 71 q4 -4 8 0"/><path d="M129 84 q6 6 12 0"/></g>
+  </g>
+  <g class="b3spark" font-size="16" fill="#f2b84b">
+    <text x="112" y="122">✦</text><text x="232" y="112">✦</text><text x="238" y="214">✦</text><text x="150" y="232">✦</text>
+  </g>
+  <circle class="b3flash" cx="181" cy="160" r="34" fill="url(#b3glow)"/>
+</g>
+<g class="b3newborn"><g transform="translate(262 224) scale(1.25) translate(-278 -252)">
+  <ellipse cx="270" cy="292" rx="58" ry="6" fill="#c98f95" opacity=".3"/>
+  <g filter="url(#b3sh)">
+    <ellipse cx="272" cy="276" rx="56" ry="13" fill="url(#b3cloud)"/>
+    <circle cx="232" cy="270" r="14" fill="url(#b3cloud)"/><circle cx="312" cy="268" r="16" fill="url(#b3cloud)"/>
+  </g>
+  <g class="b3rock" filter="url(#b3sh)">
+    <ellipse cx="278" cy="252" rx="42" ry="22" fill="url(#b3blanket)" transform="rotate(-6 278 252)"/>
+    <path d="M250 262 q26 -24 64 -22" stroke="#e9aebb" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M262 270 q22 -14 48 -12" stroke="#f1c4cd" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <circle cx="246" cy="240" r="20" fill="url(#b3baby)"/>
+    <path d="M227 236 q2 -24 24 -22 q16 2 16 18 q-20 -10 -40 4z" fill="#f2a5b2"/><circle cx="252" cy="213" r="5" fill="#f7c2cb"/>
+    <ellipse cx="239" cy="232" rx="5" ry="3" fill="#fff" opacity=".55"/>
+    <circle cx="236" cy="248" r="4" fill="#f59fa0" opacity=".8"/><circle cx="257" cy="248" r="4" fill="#f59fa0" opacity=".8"/>
+    <path d="M235 240 q3.5 -4 7 0M249 240 q3.5 -4 7 0" stroke="#6b4547" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M240 248 q6 8 12 0z" fill="#e8737f" stroke="#6b4547" stroke-width="1.6" stroke-linejoin="round"/>
+    <g class="b3wave"><circle cx="270" cy="244" r="6" fill="url(#b3baby)"/></g>
+  </g>
+  <g class="b3hearts">
+    <path d="M214 190c0-6 8-8 10-2 2-6 10-4 10 2 0 7-10 12-10 12s-10-5-10-12z" fill="#e58f99"/>
+    <path d="M276 196c0-4 6-6 7-1 1-5 7-3 7 1 0 5-7 9-7 9s-7-4-7-9z" fill="#f0b3b8"/>
+    <path d="M300 214c0-5 7-7 9-2 2-5 9-3 9 2 0 6-9 11-9 11s-9-5-9-11z" fill="#e58f99"/>
+  </g>
+</g></g>
+<g class="b3conf">
+  <rect x="40" y="40" width="7" height="4" rx="1" fill="#f2a7b3" style="--d:1.2s;--t:2.4s"/><circle cx="78" cy="34" r="3" fill="#f7d27a" style="--d:1.5s;--t:2.8s"/>
+  <rect x="116" y="46" width="6" height="4" rx="1" fill="#a9cfa0" style="--d:1.3s;--t:2.2s"/><circle cx="150" cy="38" r="3" fill="#9cc3e8" style="--d:1.7s;--t:2.6s"/>
+  <rect x="190" y="42" width="7" height="4" rx="1" fill="#e58f99" style="--d:1.25s;--t:2.5s"/><circle cx="222" cy="36" r="3" fill="#f7d27a" style="--d:1.6s;--t:2.3s"/>
+  <rect x="258" y="44" width="6" height="4" rx="1" fill="#9cc3e8" style="--d:1.4s;--t:2.7s"/><circle cx="292" cy="38" r="3" fill="#f2a7b3" style="--d:1.8s;--t:2.4s"/>
+  <rect x="316" y="48" width="7" height="4" rx="1" fill="#a9cfa0" style="--d:1.35s;--t:2.9s"/><circle cx="60" cy="56" r="2.5" fill="#e58f99" style="--d:2s;--t:2.5s"/>
+  <circle cx="176" cy="58" r="2.5" fill="#a9cfa0" style="--d:2.1s;--t:2.4s"/><rect x="240" y="60" width="6" height="3" rx="1" fill="#f7d27a" style="--d:2.2s;--t:2.6s"/>
+</g>
+</svg>`;
+function chime() {
+  if (!data.sound) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === 'suspended') actx.resume();
+    [72, 76, 79, 84, 88].forEach((m, i) => {
+      const t = actx.currentTime + i * .12, o = actx.createOscillator(), g = actx.createGain();
+      o.type = 'sine'; o.frequency.value = 440 * Math.pow(2, (m - 69) / 12);
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.09, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + 1.4);
+      o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + 1.5);
+    });
+  } catch (e) {}
+}
+let birthTimers = [];
+function playBirth() {
+  const sc = $('birthScene');
+  birthTimers.forEach(clearTimeout); birthTimers = [];
+  sc.classList.remove('glow', 'flash', 'born'); void sc.getBoundingClientRect();
+  sc.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  pop(); sc.classList.add('glow');
+  $('birthBtn').disabled = true; $('birthPreview').disabled = true;
+  const at = (ms, fn) => birthTimers.push(setTimeout(fn, ms));
+  at(2000, () => { sc.classList.add('flash'); chime(); });
+  at(2500, () => { sc.classList.remove('glow'); sc.classList.add('born'); });
+  at(4200, () => { toast('Selamat datang ke dunia, baby! 🤍'); $('birthReset').classList.remove('hidden'); renderBirth(); });
+}
+function resetBirth() {
+  birthTimers.forEach(clearTimeout); birthTimers = [];
+  $('birthScene').classList.remove('glow', 'flash', 'born');
+  $('birthReset').classList.add('hidden'); renderBirth(); pop();
+}
+// Buka animasi hanya bila cukup 9 bulan 10 hari (280 hari, iaitu tarikh jangka bersalin)
+function renderBirth() {
+  const st = $('birthStatus'); if (!st) return;
+  const p = preg(), btn = $('birthBtn'), pv = $('birthPreview'), bar = $('birthBar'), wrap = $('birthBarWrap');
+  const playing = birthTimers.length && !$('birthScene').classList.contains('born');
+  btn.disabled = true; pv.disabled = !!playing; pv.classList.remove('hidden'); wrap.classList.remove('hidden');
+  if (!p || p.gd < 0) {
+    st.innerHTML = 'Tetapkan tarikh jangka bersalin di <a href="#profile" onclick="go(\'profile\');return false">Profil</a>. Animasi akan dibuka bila cukup 9 bulan 10 hari.';
+    btn.textContent = '🔒 Tarikh belum ditetapkan'; wrap.classList.add('hidden');
+  } else if (p.left <= 0) {
+    st.innerHTML = '🎉 <b>Sudah cukup 9 bulan 10 hari!</b> Tekan butang untuk sambut baby.';
+    btn.disabled = !!playing; btn.textContent = $('birthScene').classList.contains('born') ? '▶ Main semula' : '▶ Sambut baby';
+    bar.style.width = '100%'; pv.classList.add('hidden');
+  } else {
+    const m = Math.floor(p.gd / 30.42), d = p.gd - Math.round(m * 30.42);
+    st.innerHTML = `Kandungan kini ± <b>${m} bulan ${d} hari</b>. Lagi <b>${p.left} hari</b> untuk cukup 9 bulan 10 hari.`;
+    btn.textContent = '🔒 Dibuka pada ' + fmtDate(p.due);
+    bar.style.width = Math.min(100, p.gd / 280 * 100).toFixed(1) + '%';
+  }
+}
+
+/* ---------- Profil & backup ---------- */
+function loadProfile() {
+  $('motherName').value = data.name || ''; $('dueDate').value = data.due || ''; $('lmpDate').value = data.lmp || '';
+  $('soundOn').checked = !!data.sound; $('musicOn').checked = !!data.music; showDueCalc();
+}
+function showDueCalc() {
+  const lmp = $('lmpDate').value, due = $('dueDate').value;
+  $('dueCalc').textContent = !due && lmp ? `Anggaran tarikh jangka dari haid terakhir: ${fmtDate(addDays(lmp, 280))}. Tarikh dari klinik lebih tepat.`
+    : 'Jika tarikh jangka kosong, app akan kira dari tarikh haid terakhir (+280 hari). Tarikh dari klinik lebih tepat.';
+}
+function saveProfile() {
+  const due = $('dueDate').value, lmp = $('lmpDate').value, t = todayISO();
+  if (lmp && lmp > t) { toast('Tarikh haid terakhir tidak boleh pada masa depan'); return; }
+  if (due && diffDays(t, due) > 280) { toast('Tarikh jangka lebih 40 minggu dari hari ini. Sila semak.'); return; }
+  data.name = $('motherName').value.trim(); data.due = due; data.lmp = lmp; data.sound = $('soundOn').checked;
+  data.music = $('musicOn').checked; if (data.music) Music.start(); else Music.stop(); renderMusicBtn();
+  persist(); renderHome(); showDueCalc(); pop(); toast('Tetapan disimpan ✓');
+}
+function exportData() {
+  download('baby-mama-backup-' + todayISO() + '.json', JSON.stringify(data, null, 2), 'application/json');
+  toast('Backup dimuat turun ✓');
+}
+function importData(file) {
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const d = JSON.parse(r.result);
+      if (!d || !Array.isArray(d.kicks) || !Array.isArray(d.meds)) throw new Error('bad');
+      if (!confirm('Gantikan semua data sekarang dengan data dari backup?')) return;
+      data = migrate(d); persist(); renderAll(); toast('Data dipulihkan ✓');
+    } catch (e) { toast('Fail backup tidak sah'); }
+  };
+  r.readAsText(file);
+}
+function resetData() {
+  if (!confirm('Padam SEMUA rekod tendangan, ubat dan profil? Tindakan ini tidak boleh dibatalkan.')) return;
+  data = clone(DEFAULT); persist(); renderAll(); toast('Semua data dipadam');
+}
+
+/* ---------- App telefon (PWA): pasang, offline, simpanan kekal ---------- */
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+let swReg = null, installEvt = null;
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  navigator.serviceWorker.register('sw.js').then(r => { swReg = r; }).catch(() => {});
+}
+// Notifikasi: Android/app terpasang perlukan service worker; browser biasa guna Notification terus
+function showNotif(title, body) {
+  const opt = { body, icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', tag: 'baby-mama-' + Date.now() };
+  if (swReg && swReg.showNotification) { swReg.showNotification(title, opt).catch(() => {}); return; }
+  try { new Notification(title, opt); } catch (e) {}
+}
+// Minta browser simpan data secara kekal (tidak dipadam automatik bila storan penuh)
+async function askPersist() {
+  try {
+    if (navigator.storage && navigator.storage.persist) {
+      const ok = (await navigator.storage.persisted()) || (await navigator.storage.persist());
+      if (ok) $('saveStatus').textContent = '✓ Data disimpan automatik dan kekal dalam telefon ini.';
+    }
+  } catch (e) {}
+}
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; renderInstall(); });
+window.addEventListener('appinstalled', () => { installEvt = null; toast('Baby Mama dipasang ✓'); renderInstall(); });
+async function installApp() {
+  if (!installEvt) return;
+  installEvt.prompt();
+  try { await installEvt.userChoice; } catch (e) {}
+  installEvt = null; renderInstall();
+}
+function renderInstall() {
+  const card = $('installCard'), text = $('installText');
+  $('installBtn').classList.toggle('hidden', !installEvt);
+  $('iosSteps').classList.add('hidden'); $('androidSteps').classList.add('hidden');
+  if (isStandalone()) { text.textContent = '✓ Baby Mama sudah dipasang di telefon ini.'; card.classList.add('hidden'); return; }
+  card.classList.remove('hidden');
+  if (isIOS) {
+    text.innerHTML = 'Pasang di skrin utama supaya data <b>tidak dipadam</b> oleh Safari dan app dibuka skrin penuh.';
+    $('iosSteps').classList.remove('hidden');
+  } else if (!installEvt) {
+    $('androidSteps').classList.remove('hidden');
+  }
+}
+
+/* ---------- Mula ---------- */
+function setupDates() {
+  const d = todayISO();
+  $('kickDate').value = d; $('kickTime').value = nowHM(); $('kickDay').value = dayName(d);
+  $('filterDate').value = d; $('filterDay').value = dayName(d);
+  $('medDate').value = d;
+  $('kickDate').onchange = () => $('kickDay').value = dayName($('kickDate').value);
+  $('filterDate').onchange = () => { $('filterDay').value = dayName($('filterDate').value); renderKicks(); };
+  $('medDate').onchange = renderMeds;
+  $('dueDate').oninput = showDueCalc; $('lmpDate').oninput = showDueCalc;
+  $('reminderOn').onchange = e => { data.reminders = e.target.checked; persist(); toast(data.reminders ? 'Peringatan dihidupkan' : 'Peringatan dimatikan'); };
+  $('importFile').onchange = e => { if (e.target.files[0]) importData(e.target.files[0]); e.target.value = ''; };
+}
+function renderAll() {
+  document.querySelectorAll('#home .bellyArt').forEach(el => el.innerHTML = BELLY_HTML);
+  if (!$('birthScene').firstChild) $('birthScene').innerHTML = BIRTH_SVG;
+  loadProfile(); renderHome(); renderSession(); renderKicks(); renderMeds(); renderNotif();
+  const p = preg(); setWeek(p && p.week >= 4 && p.week <= 40 ? p.week : 12, true);
+}
+document.querySelectorAll('.nav button').forEach(b => b.onclick = () => go(b.dataset.page));
+setupDates(); renderAll();
+{ const start = new URLSearchParams(location.search).get('page'); if (start && $(start) && $(start).classList.contains('page')) go(start); }
+setInterval(tickSession, 1000);
+setInterval(checkReminders, 15000);
+// Senyapkan muzik bila app ditutup / tukar tab, sambung bila kembali
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { if (actx && actx.state === 'running') actx.suspend(); }
+  else { if (actx && actx.state === 'suspended' && (Music.playing || data.sound)) actx.resume(); checkReminders(); renderHome(); renderMeds(); }
+});
+renderMusicBtn(); renderInstall(); askPersist();
+</script>
+</body>
+</html>
