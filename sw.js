@@ -1,6 +1,6 @@
 // Baby Mama service worker: app boleh dibuka tanpa internet selepas kali pertama.
 // Tukar VERSION setiap kali fail app dikemas kini supaya telefon ambil versi baru.
-const VERSION = 'baby-mama-v2';
+const VERSION = 'baby-mama-v3';
 const ASSETS = [
   './',
   'index.html',

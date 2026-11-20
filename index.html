@@ -8,6 +8,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Baby Mama">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
 <meta name="description" content="Baby Mama: teman ibu mengandung untuk rekod tendangan baby, ubat dan perkembangan baby minggu demi minggu.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
@@ -488,7 +490,33 @@ const DEFAULT = {
 };
 
 // Tukar data versi 1 (ubat ikut nombor urutan) ke versi 2 (ubat ada id sendiri)
-function migrate(d) {
+// Bersihkan data (dari telefon atau fail backup) supaya hanya nilai yang sah masuk ke app.
+// Penting: id digunakan dalam butang onclick, jadi id mesti huruf/nombor sahaja.
+const okId = v => typeof v === 'string' && /^[A-Za-z0-9_-]{1,40}$/.test(v) ? v : uid();
+const okStr = (v, max) => typeof v === 'string' ? v.slice(0, max) : '';
+const okDate = v => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : '';
+const okTime = v => typeof v === 'string' && /^\d{2}:\d{2}$/.test(v) ? v : '';
+const okNum = (v, min, max) => typeof v === 'number' && isFinite(v) ? Math.min(max, Math.max(min, Math.round(v))) : null;
+function sanitize(d) {
+  d.name = okStr(d.name, 40); d.due = okDate(d.due); d.lmp = okDate(d.lmp);
+  ['sound', 'music', 'reminders'].forEach(k => d[k] = !!d[k]);
+  d.kicks = (Array.isArray(d.kicks) ? d.kicks : []).filter(k => k && okDate(k.date) && okTime(k.time))
+    .map(k => ({ id: okId(k.id), date: k.date, time: k.time }));
+  d.meds = (Array.isArray(d.meds) ? d.meds : []).filter(m => m && typeof m === 'object').map(m => ({
+    id: okId(m.id), name: okStr(m.name, 60) || 'Ubat', dose: okStr(m.dose, 30), time: okTime(m.time) || '08:00',
+    stock: okNum(m.stock, 0, 9999), per: okNum(m.per, 1, 20) || 1 }));
+  d.tcas = (Array.isArray(d.tcas) ? d.tcas : []).filter(a => a && okDate(a.date)).map(a => ({
+    id: okId(a.id), date: a.date, time: okTime(a.time), place: okStr(a.place, 80), who: okStr(a.who, 60),
+    purpose: okStr(a.purpose, 120), bring: okStr(a.bring, 500), note: okStr(a.note, 300) }));
+  ['checks', 'sent'].forEach(k => { const o = {}; if (d[k] && typeof d[k] === 'object') Object.keys(d[k]).forEach(x => { if (d[k][x] === true) o[x] = true; }); d[k] = o; });
+  d.sessions = (Array.isArray(d.sessions) ? d.sessions : []).filter(x => x && okDate(x.date) && okTime(x.start)).slice(0, 60).map(x => ({
+    id: okId(x.id), date: x.date, start: x.start, mins: okNum(x.mins, 1, 1440) || 1, count: okNum(x.count, 0, 99) || 0, t10: okNum(x.t10, 1, 1440) }));
+  const a = d.active;
+  d.active = a && typeof a === 'object' && okNum(a.start, 0, Date.now() + 864e5) ? { start: okNum(a.start, 0, Date.now() + 864e5), count: okNum(a.count, 0, 99) || 0, t10: okNum(a.t10, 1, 1440) } : null;
+  return d;
+}
+function migrate(d) { return sanitize(migrateRaw(d)); }
+function migrateRaw(d) {
   if (d && d.v === 2) return Object.assign(clone(DEFAULT), d);
   const out = clone(DEFAULT);
   if (!d) return out;
