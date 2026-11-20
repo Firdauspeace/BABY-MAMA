@@ -1,6 +1,6 @@
 // Baby Mama service worker: app boleh dibuka tanpa internet selepas kali pertama.
 // Tukar VERSION setiap kali fail app dikemas kini supaya telefon ambil versi baru.
-const VERSION = 'baby-mama-v1';
+const VERSION = 'baby-mama-v2';
 const ASSETS = [
   './',
   'index.html',
@@ -43,13 +43,14 @@ self.addEventListener('fetch', e => {
   );
 });
 
-// Tekan notifikasi ubat: buka app
+// Tekan notifikasi (ubat / TCA / stok): buka app di halaman berkaitan
 self.addEventListener('notificationclick', e => {
   e.notification.close();
+  const url = (e.notification.data && e.notification.data.url) || './';
   e.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
-      for (const c of list) if ('focus' in c) return c.focus();
-      return self.clients.openWindow('./?page=meds');
+      for (const c of list) if ('focus' in c) { if ('navigate' in c) c.navigate(url).catch(() => {}); return c.focus(); }
+      return self.clients.openWindow(url);
     })
   );
 });

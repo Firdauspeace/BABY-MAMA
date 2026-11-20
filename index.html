@@ -85,7 +85,7 @@ a{color:var(--rose);font-weight:700}
 .row{display:flex;gap:10px}.row>*{flex:1}
 label{display:block;font-size:13px;font-weight:700;margin:10px 0 5px}
 label.check{display:flex;align-items:center;gap:10px;font-weight:600;cursor:pointer}
-input,select{font:inherit;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px;width:100%;outline-color:#c87980;min-height:44px}
+input,select,textarea{font:inherit;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px;width:100%;outline-color:#c87980;min-height:44px}
 input[type=checkbox]{width:22px;height:22px;min-height:0;accent-color:var(--sage);flex:none;margin:0}
 input[type=range]{padding:0;border:0;accent-color:var(--rose);background:none;min-height:30px}
 input[readonly]{background:#fdf6f3}
@@ -184,6 +184,34 @@ input[readonly]{background:#fdf6f3}
 .nav button.active{color:var(--rose);font-weight:800}
 .toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#563b3c;color:#fff;padding:10px 16px;border-radius:20px;font-size:13px;opacity:0;pointer-events:none;transition:.2s;z-index:5;max-width:calc(100% - 32px);width:max-content;text-align:center}
 .toast.show{opacity:1}
+textarea{resize:vertical;line-height:1.45}
+/* Temu janji TCA */
+.tcahome{display:flex;gap:12px;align-items:center;width:100%;text-align:left;cursor:pointer;color:var(--ink);background:linear-gradient(120deg,#eef2e9,#fbfdf8);border-color:#dfe8d6}
+.tcahome .tcaicon{font-size:30px}
+.tcahome small{display:block;font-size:12px;color:var(--muted)}
+.tcahome b{display:block;font-size:15px;margin:2px 0}
+.daysbig{margin-left:auto;text-align:center;background:#fff;border-radius:16px;padding:8px 10px;min-width:70px;box-shadow:0 3px 8px #7d927018}
+.daysbig strong{display:block;font-size:26px;line-height:1.1;color:var(--sage)}
+.daysbig span{font-size:11px;color:var(--muted)}
+.daysbig.soon strong{color:var(--rose)}
+.daysbig.today strong{color:var(--warn);font-size:18px}
+.tcanext{background:linear-gradient(120deg,#eef2e9,#fbfdf8);border-color:#dfe8d6}
+.tcanext .pregtop strong{color:var(--sage)}
+.appt{border:1px solid #f4e7e4;border-radius:16px;padding:12px;margin:10px 0;background:#fffdfb}
+.appt.past{opacity:.65}
+.appthead{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.appthead b{font-size:15px}
+.apptmeta{font-size:13px;color:var(--muted);margin-top:3px;line-height:1.5}
+.bring{margin:8px 0 0;padding:8px 10px 8px 12px;background:var(--cream);border-radius:12px;font-size:13px}
+.bring b{display:block;font-size:12px;color:var(--rose);margin-bottom:3px}
+.bring ul{margin:0;padding-left:18px;color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 2px}
+.chips button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:6px 10px;font-size:12px;cursor:pointer;color:var(--ink)}
+.chips button:active{transform:scale(.96)}
+/* Stok ubat */
+.stock{font-size:12px;margin-top:2px;color:var(--sage);font-weight:650}
+.stock.low{color:var(--warn)}
+.countdown{font-size:12px;color:var(--rose);font-weight:700}
 .hidden{display:none!important}
 </style>
 </head>
@@ -203,6 +231,7 @@ input[readonly]{background:#fdf6f3}
     <button class="stat" onclick="go('kicks')">👣 Tendangan hari ini<b id="todayCount">0 kali</b><small id="lastKick">Belum ada rekod</small></button>
     <button class="stat" onclick="go('meds')">💊 Ubat seterusnya<b id="nextMed">—</b><small id="nextMedTime"></small></button>
   </div>
+  <button class="card tcahome" id="tcaHome" onclick="go('tca')"></button>
   <div class="card">
     <h2>Baby hari ini</h2>
     <div class="bellyArt" role="button" tabindex="0" aria-label="Sentuh untuk lihat baby menendang" onclick="tapBaby()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();tapBaby()}"></div>
@@ -292,6 +321,11 @@ input[readonly]{background:#fdf6f3}
         <div><label for="medDose">Dos (pilihan)</label><input id="medDose" placeholder="1 biji" maxlength="30"></div>
         <div><label for="medTime">Masa</label><input id="medTime" type="time" value="08:00"></div>
       </div>
+      <div class="fieldrow">
+        <div><label for="medStock">Stok tinggal (pilihan)</label><input id="medStock" type="number" min="0" max="9999" inputmode="numeric" placeholder="Contoh: 30"></div>
+        <div><label for="medPer">Biji setiap kali</label><input id="medPer" type="number" min="1" max="20" inputmode="numeric" value="1"></div>
+      </div>
+      <p class="subtle">Stok ditolak automatik bila ubat ditanda sudah diambil. App akan ingatkan bila stok tinggal 7 hari atau kurang.</p>
       <div class="row" style="margin-top:8px"><button class="btn ghost" onclick="closeMedForm()">Batal</button><button class="btn" onclick="saveMed()">Simpan</button></div>
     </div>
   </div>
@@ -309,6 +343,47 @@ input[readonly]{background:#fdf6f3}
     <p>Simpan semua ubat ke kalendar telefon. Kalendar akan berbunyi setiap hari pada masa ubat, walaupun app ini ditutup.</p>
     <button class="btn full" onclick="exportCalendar()">Simpan ke kalendar telefon</button>
     <p class="subtle">Selepas fail dimuat turun, buka fail itu dan pilih "Tambah ke kalendar". Jika ubat ditukar, simpan semula.</p>
+  </div>
+</section>
+
+<!-- TCA (TEMU JANJI KLINIK) -->
+<section class="page" id="tca">
+  <h1>Temu Janji Klinik (TCA)</h1>
+  <p>Simpan tarikh jumpa doktor atau jururawat. App kira berapa hari lagi dan ingatkan ibu.</p>
+  <div class="card tcanext" id="tcaNext"></div>
+
+  <div class="card">
+    <h2>Temu janji akan datang</h2>
+    <div id="tcaList"></div>
+    <button class="btn secondary full" id="addTcaBtn" onclick="openTcaForm()">＋ Tambah temu janji</button>
+    <div id="tcaForm" class="hidden">
+      <h2 id="tcaFormTitle" style="margin-top:12px">Tambah temu janji</h2>
+      <div class="fieldrow">
+        <div><label for="tcaDate">Tarikh</label><input id="tcaDate" type="date"></div>
+        <div><label for="tcaTime">Masa</label><input id="tcaTime" type="time" value="09:00"></div>
+      </div>
+      <label for="tcaPlace">Klinik / hospital</label><input id="tcaPlace" placeholder="Contoh: Klinik Kesihatan Klang" maxlength="80">
+      <label for="tcaWho">Jumpa siapa</label><input id="tcaWho" placeholder="Contoh: Doktor / Jururawat / Dr. Aminah" maxlength="60">
+      <label for="tcaPurpose">Tujuan</label><input id="tcaPurpose" placeholder="Contoh: Pemeriksaan rutin, scan, ujian darah" maxlength="120">
+      <label for="tcaBring">Perlu bawa (satu baris satu barang)</label>
+      <textarea id="tcaBring" rows="4" placeholder="Buku pink&#10;Kad pengenalan" maxlength="500"></textarea>
+      <div class="chips" id="bringChips"></div>
+      <label for="tcaNote">Nota (pilihan)</label>
+      <textarea id="tcaNote" rows="2" placeholder="Contoh: Puasa dari pukul 10 malam" maxlength="300"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn ghost" onclick="closeTcaForm()">Batal</button><button class="btn" onclick="saveTca()">Simpan</button></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🔔 Peringatan TCA</h2>
+    <p>Bila app dibuka, ibu akan diingatkan <b>3 hari sebelum</b>, <b>sehari sebelum</b> dan <b>pada hari</b> temu janji.</p>
+    <button class="btn full" onclick="exportTcaCalendar()">📅 Simpan TCA ke kalendar telefon</button>
+    <p class="subtle">Kalendar telefon akan berbunyi 3 hari, 1 hari dan 2 jam sebelum temu janji, walaupun app ditutup. Jika TCA ditukar, simpan semula.</p>
+  </div>
+
+  <div class="card hidden" id="tcaPastCard">
+    <h2>Temu janji lepas</h2>
+    <div id="tcaPast"></div>
   </div>
 </section>
 
@@ -372,6 +447,7 @@ input[readonly]{background:#fdf6f3}
   <button data-page="kicks"><span>👣</span>Tendangan</button>
   <button data-page="growth"><span>♡</span>Baby</button>
   <button data-page="meds"><span>💊</span>Ubat</button>
+  <button data-page="tca"><span>📅</span>TCA</button>
   <button data-page="birth"><span>✨</span>Bersalin</button>
   <button data-page="profile"><span>⚙</span>Profil</button>
 </nav>
@@ -394,13 +470,16 @@ const fmtDate = (s, opt = { day: 'numeric', month: 'short', year: 'numeric' }) =
 const dayName = s => s ? parseISO(s).toLocaleDateString('ms-MY', { weekday: 'long' }) : '';
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 const clone = o => JSON.parse(JSON.stringify(o));
+const minsOf = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+const nowMins = () => { const d = new Date(); return d.getHours() * 60 + d.getMinutes(); };
+const fmtDur = m => m < 1 ? 'kurang 1 min' : m < 60 ? m + ' min' : Math.floor(m / 60) + ' jam' + (m % 60 ? ' ' + (m % 60) + ' min' : '');
 const period = t => { const h = +t.split(':')[0]; return h < 12 ? 'Pagi' : h < 19 ? 'Petang' : 'Malam'; };
 
 /* ---------- Data ---------- */
 const KEY = 'temanIbu';
 const DEFAULT = {
   v: 2, name: '', due: '', lmp: '', sound: true, music: true, reminders: true,
-  kicks: [], sessions: [], active: null, checks: {}, sent: {},
+  kicks: [], sessions: [], active: null, checks: {}, sent: {}, tcas: [],
   meds: [
     { id: 'm0', name: 'Vitamin pranatal', dose: '1 biji', time: '08:00' },
     { id: 'm1', name: 'Zat besi', dose: '1 biji', time: '14:00' },
@@ -622,6 +701,8 @@ function tapBaby() {
 function go(page) {
   document.querySelectorAll('.nav button').forEach(x => x.classList.toggle('active', x.dataset.page === page));
   document.querySelectorAll('.page').forEach(x => x.classList.toggle('active', x.id === page));
+  if (page === 'tca') renderTca();
+  if (page === 'meds') renderMeds();
   if (page === 'growth') { const p = preg(); if (p && p.week >= 4 && p.week <= 40) setWeek(p.week, true); }
   window.scrollTo(0, 0); pop();
 }
@@ -684,10 +765,15 @@ function renderHome() {
   const t = todayISO(), today = data.kicks.filter(k => k.date === t).sort((a, b) => b.time.localeCompare(a.time));
   $('todayCount').textContent = today.length + ' kali';
   $('lastKick').textContent = today.length ? 'Terakhir ' + today[0].time : 'Belum ada rekod';
+  renderNextMed();
+  renderBirth();
+}
+function renderNextMed() {
   const n = nextMed();
   $('nextMed').textContent = n ? n.med.name : (data.meds.length ? 'Selesai hari ini ✓' : 'Belum ditetapkan');
-  $('nextMedTime').innerHTML = n ? esc(n.med.time) + (n.late ? ' · <span style="color:var(--warn)">belum diambil</span>' : '') : '';
-  renderBirth();
+  $('nextMedTime').innerHTML = n ? esc(n.med.time) + (n.late ? ' · <span style="color:var(--warn)">belum diambil</span>'
+    : ' · <span class="countdown">lagi ' + fmtDur(minsOf(n.med.time) - nowMins()) + '</span>') : '';
+  renderTcaHome();
 }
 
 /* ---------- Tendangan ---------- */
@@ -807,15 +893,22 @@ function nextMed() {
   const late = pending.filter(m => m.time < hm);
   return late.length ? { med: late[0], late: true } : { med: pending[0], late: false };
 }
+const LOW_DAYS = 7;
+const hasStock = m => typeof m.stock === 'number' && m.stock >= 0;
+// Setiap ubat dalam senarai diambil sekali sehari, jadi stok cukup = stok / biji setiap kali
+const stockDays = m => hasStock(m) ? Math.floor(m.stock / (m.per || 1)) : null;
 function renderMeds() {
   const date = $('medDate').value || todayISO(), isToday = date === todayISO(), hm = nowHM();
-  const meds = sortedMeds();
+  const meds = sortedMeds(), n = isToday ? nextMed() : null;
   $('medList').innerHTML = meds.length ? meds.map(m => {
     const key = date + '|' + m.id, done = !!data.checks[key];
     const late = isToday && !done && m.time < hm;
+    const cd = n && !n.late && n.med.id === m.id ? ` · <span class="countdown">lagi ${fmtDur(minsOf(m.time) - nowMins())}</span>` : '';
+    const sd = stockDays(m), st = sd === null ? ''
+      : `<div class="stock ${sd <= LOW_DAYS ? 'low' : ''}">${sd <= 0 ? '⚠️ Stok habis' : (sd <= LOW_DAYS ? '⚠️ ' : '📦 ') + 'Stok ' + m.stock + ' biji · cukup ' + sd + ' hari'}</div>`;
     return `<div class="medicine ${done ? 'done' : ''}">
       <input type="checkbox" ${done ? 'checked' : ''} aria-label="Tanda ${esc(m.name)} sudah diambil" onchange="checkMed('${esc(m.id)}',this.checked)">
-      <div><b>${esc(m.name)}</b><div class="medtime">${esc(m.time)}${m.dose ? ' · ' + esc(m.dose) : ''}</div></div>
+      <div><b>${esc(m.name)}</b><div class="medtime">${esc(m.time)}${m.dose ? ' · ' + esc(m.dose) : ''}${cd}</div>${st}</div>
       <span class="pill ${late ? 'late' : ''}">${late ? 'Belum ambil' : period(m.time)}</span>
       <div class="medact"><button class="iconbtn" onclick="openMedForm('${esc(m.id)}')" aria-label="Ubah ${esc(m.name)}">✎</button><button class="iconbtn" onclick="delMed('${esc(m.id)}')" aria-label="Padam ${esc(m.name)}">×</button></div>
     </div>`;
@@ -823,8 +916,13 @@ function renderMeds() {
 }
 function checkMed(id, v) {
   const key = ($('medDate').value || todayISO()) + '|' + id;
+  if (!!data.checks[key] === v) return;
   if (v) data.checks[key] = true; else delete data.checks[key];
-  persist(); pop(); renderMeds(); renderHome(); toast(v ? 'Ubat ditanda sudah diambil ✓' : 'Tanda dibuang');
+  const m = data.meds.find(x => x.id === id);
+  if (m && hasStock(m)) m.stock = Math.max(0, m.stock + (v ? -1 : 1) * (m.per || 1));
+  persist(); pop(); renderMeds(); renderHome();
+  const sd = m ? stockDays(m) : null;
+  toast(v ? (sd !== null && sd <= LOW_DAYS ? `Ubat diambil ✓ Stok ${m.name} tinggal ${sd} hari` : 'Ubat ditanda sudah diambil ✓') : 'Tanda dibuang');
 }
 let editingMed = null;
 function openMedForm(id) {
@@ -832,6 +930,7 @@ function openMedForm(id) {
   const m = data.meds.find(x => x.id === id);
   $('medFormTitle').textContent = m ? 'Ubah ubat' : 'Tambah ubat';
   $('medName').value = m ? m.name : ''; $('medDose').value = m ? m.dose : ''; $('medTime').value = m ? m.time : '08:00';
+  $('medStock').value = m && hasStock(m) ? m.stock : ''; $('medPer').value = m && m.per ? m.per : 1;
   $('medForm').classList.remove('hidden'); $('addMedBtn').classList.add('hidden'); $('medName').focus();
 }
 function closeMedForm() { editingMed = null; $('medForm').classList.add('hidden'); $('addMedBtn').classList.remove('hidden'); }
@@ -839,8 +938,10 @@ function saveMed() {
   const name = $('medName').value.trim(), dose = $('medDose').value.trim(), time = $('medTime').value;
   if (!name) { toast('Masukkan nama ubat'); return; }
   if (!time) { toast('Pilih masa ubat'); return; }
+  const sv = $('medStock').value.trim(), stock = sv === '' ? null : Math.max(0, Math.round(+sv) || 0);
+  const per = Math.min(20, Math.max(1, Math.round(+$('medPer').value) || 1));
   const m = data.meds.find(x => x.id === editingMed);
-  if (m) Object.assign(m, { name, dose, time }); else data.meds.push({ id: uid(), name, dose, time });
+  if (m) Object.assign(m, { name, dose, time, stock, per }); else data.meds.push({ id: uid(), name, dose, time, stock, per });
   persist(); pop(); closeMedForm(); renderMeds(); renderHome(); toast(m ? 'Ubat dikemas kini ✓' : 'Ubat ditambah ✓');
 }
 function delMed(id) {
@@ -866,27 +967,39 @@ function enableNotifications() {
   if (!hasNotif()) { toast('Browser ini tidak menyokong notifikasi'); return; }
   Notification.requestPermission().then(p => { renderNotif(); toast(p === 'granted' ? 'Notifikasi dibenarkan ✓' : 'Kebenaran notifikasi belum diberi'); });
 }
-let lastDay = todayISO();
+let lastDay = '';
+const REMIND_WINDOW = 120; // minit: masih ingatkan jika app dibuka lewat (contoh telefon tidur tepat pada masa ubat)
+function remind(key, msg, url) {
+  if (data.sent[key]) return;
+  data.sent[key] = true; persist(); pop(); toast(msg);
+  if (hasNotif() && Notification.permission === 'granted') showNotif('Baby Mama', msg, url);
+}
 function checkReminders() {
   const t = todayISO();
-  if (t !== lastDay) { // lepas tengah malam
+  if (t !== lastDay) { // hari baru (atau app baru dibuka): buang rekod peringatan hari lain
+    const fresh = lastDay !== '';
     lastDay = t;
     Object.keys(data.sent).forEach(k => { if (!k.startsWith(t)) delete data.sent[k]; });
-    renderHome(); renderMeds(); persist();
+    persist(); if (fresh) { renderHome(); renderMeds(); renderTca(); }
   }
   if (!data.reminders) return;
-  const hm = nowHM();
+  const now = nowMins();
   data.meds.forEach(m => {
-    const k = t + '|' + m.id;
-    if (m.time === hm && !data.sent[k] && !data.checks[k]) {
-      data.sent[k] = true; persist(); pop();
-      toast('💊 Masa makan ubat: ' + m.name);
-      if (hasNotif() && Notification.permission === 'granted') {
-        showNotif('Baby Mama', 'Masa makan ubat: ' + m.name + (m.dose ? ' (' + m.dose + ')' : '') + ' 💊');
-      }
-      renderHome();
+    const k = t + '|' + m.id, since = now - minsOf(m.time);
+    if (since >= 0 && since <= REMIND_WINDOW && !data.checks[k]) {
+      remind(k, 'Masa makan ubat: ' + m.name + (m.dose ? ' (' + m.dose + ')' : '') + ' 💊', './?page=meds');
+    }
+    const sd = stockDays(m);
+    if (sd !== null && sd <= LOW_DAYS && now >= 9 * 60) {
+      remind(t + '|stock|' + m.id, sd <= 0 ? `Stok ${m.name} sudah habis. Dapatkan ubat baru 📦` : `Stok ${m.name} tinggal ${sd} hari. Dapatkan ubat baru 📦`, './?page=meds');
     }
   });
+  upcomingTcas().forEach(a => {
+    const d = diffDays(t, a.date);
+    if (d === 3 || d === 1) remind(t + '|tca|' + a.id, `${d === 1 ? 'Esok' : 'Lagi 3 hari'} temu janji klinik${a.time ? ' pukul ' + a.time : ''}: ${a.purpose || a.place || 'TCA'} 📅`, './?page=tca');
+    if (d === 0 && (!a.time || now <= minsOf(a.time))) remind(t + '|tca|' + a.id, `Hari ini temu janji klinik${a.time ? ' pukul ' + a.time : ''}${a.place ? ' di ' + a.place : ''}. Jangan lupa bawa barang 📅`, './?page=tca');
+  });
+  renderNextMed(); if ($('meds').classList.contains('active')) renderMeds();
 }
 
 /* Kalendar (.ics) supaya telefon ingatkan walaupun app ditutup */
@@ -896,9 +1009,10 @@ function download(name, text, type) {
   a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
+const icsStamp = () => new Date().toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z';
 function exportCalendar() {
   if (!data.meds.length) { toast('Tambah ubat dahulu'); return; }
-  const d = new Date(), stamp = d.toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z', day = todayISO().replace(/-/g, '');
+  const stamp = icsStamp(), day = todayISO().replace(/-/g, '');
   const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Baby Mama//MS', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH'];
   sortedMeds().forEach(m => {
     lines.push('BEGIN:VEVENT', `UID:${m.id}@baby-mama`, `DTSTAMP:${stamp}`,
@@ -910,6 +1024,108 @@ function exportCalendar() {
   lines.push('END:VCALENDAR');
   download('baby-mama-ubat.ics', lines.join('\r\n'), 'text/calendar');
   toast('Fail kalendar dimuat turun. Buka untuk tambah ✓');
+}
+
+
+/* ---------- Temu janji klinik (TCA) ---------- */
+const BRING_CHIPS = ['Buku pink', 'Kad pengenalan', 'Sampel air kencing pagi', 'Ubat yang sedang diambil', 'Keputusan ujian / scan lepas', 'Air & snek'];
+const tcaSort = (a, b) => (a.date + (a.time || '')).localeCompare(b.date + (b.time || ''));
+const upcomingTcas = () => data.tcas.filter(a => a.date >= todayISO()).sort(tcaSort);
+const pastTcas = () => data.tcas.filter(a => a.date < todayISO()).sort((a, b) => tcaSort(b, a));
+const bringList = a => String(a.bring || '').split('\n').map(x => x.trim()).filter(Boolean);
+function daysLabel(d) {
+  return d === 0 ? { big: 'Hari ini', small: '', cls: 'today' } : d === 1 ? { big: 'Esok', small: '', cls: 'today' }
+    : { big: String(d), small: 'hari lagi', cls: d <= 7 ? 'soon' : '' };
+}
+const tcaWhen = a => `${dayName(a.date)}, ${fmtDate(a.date)}${a.time ? ' · ' + a.time : ''}`;
+function renderTcaHome() {
+  const a = upcomingTcas()[0], el = $('tcaHome');
+  if (!a) { el.innerHTML = `<span class="tcaicon">📅</span><div><small>Temu janji klinik (TCA)</small><b>Belum ada temu janji</b><small>Tekan untuk tambah tarikh TCA</small></div>`; return; }
+  const L = daysLabel(diffDays(todayISO(), a.date));
+  el.innerHTML = `<span class="tcaicon">🏥</span><div><small>TCA seterusnya</small><b>${esc(a.purpose || 'Temu janji klinik')}</b><small>${esc(tcaWhen(a))}${a.place ? '<br>' + esc(a.place) : ''}</small></div>
+    <div class="daysbig ${L.cls}"><strong>${L.big}</strong><span>${L.small}</span></div>`;
+}
+function apptHTML(a, past) {
+  const d = diffDays(todayISO(), a.date), items = bringList(a);
+  const tag = past ? `<span class="pill">Selesai</span>` : `<span class="pill ${d <= 1 ? 'late' : ''}">${d === 0 ? 'Hari ini' : d === 1 ? 'Esok' : 'Lagi ' + d + ' hari'}</span>`;
+  return `<div class="appt ${past ? 'past' : ''}">
+    <div class="appthead"><div><b>${esc(a.purpose || 'Temu janji klinik')}</b>
+      <div class="apptmeta">🗓 ${esc(tcaWhen(a))}${a.place ? '<br>📍 ' + esc(a.place) : ''}${a.who ? '<br>👩‍⚕️ ' + esc(a.who) : ''}</div></div>${tag}</div>
+    ${!past && items.length ? `<div class="bring"><b>🎒 Perlu bawa</b><ul>${items.map(x => '<li>' + esc(x) + '</li>').join('')}</ul></div>` : ''}
+    ${a.note && !past ? `<p class="small" style="margin-top:6px">📝 ${esc(a.note)}</p>` : ''}
+    <div class="medact" style="justify-content:flex-end;margin-top:4px"><button class="iconbtn" onclick="openTcaForm('${esc(a.id)}')" aria-label="Ubah temu janji">✎</button><button class="iconbtn" onclick="delTca('${esc(a.id)}')" aria-label="Padam temu janji">×</button></div>
+  </div>`;
+}
+function renderTca() {
+  const up = upcomingTcas(), past = pastTcas(), a = up[0];
+  if (!a) {
+    $('tcaNext').innerHTML = `<h2>Belum ada TCA 🌷</h2><p>Masukkan tarikh temu janji yang ditulis dalam buku pink atau kad temu janji klinik.</p>`;
+  } else {
+    const d = diffDays(todayISO(), a.date), L = daysLabel(d);
+    $('tcaNext').innerHTML = `<div class="pregtop"><div><small>TCA seterusnya</small><strong>${d > 1 ? 'Lagi ' + d + ' hari' : L.big}</strong>
+      <span>${esc(tcaWhen(a))}</span></div><span class="bigemoji" style="font-size:40px">🏥</span></div>
+      <p style="margin-top:8px"><b style="color:var(--ink)">${esc(a.purpose || 'Temu janji klinik')}</b>${a.place ? '<br>📍 ' + esc(a.place) : ''}${a.who ? '<br>👩‍⚕️ Jumpa ' + esc(a.who) : ''}</p>
+      ${bringList(a).length ? `<div class="bring"><b>🎒 Jangan lupa bawa</b><ul>${bringList(a).map(x => '<li>' + esc(x) + '</li>').join('')}</ul></div>` : ''}`;
+  }
+  $('tcaList').innerHTML = up.length ? up.map(x => apptHTML(x, false)).join('') : '<p>Tiada temu janji akan datang.</p>';
+  $('tcaPastCard').classList.toggle('hidden', !past.length);
+  $('tcaPast').innerHTML = past.map(x => apptHTML(x, true)).join('');
+  renderTcaHome();
+}
+let editingTca = null;
+function openTcaForm(id) {
+  editingTca = id || null;
+  const a = data.tcas.find(x => x.id === id);
+  $('tcaFormTitle').textContent = a ? 'Ubah temu janji' : 'Tambah temu janji';
+  $('tcaDate').value = a ? a.date : ''; $('tcaTime').value = a ? (a.time || '') : '09:00';
+  $('tcaPlace').value = a ? a.place : (data.tcas.length ? data.tcas[data.tcas.length - 1].place : '');
+  $('tcaWho').value = a ? a.who : ''; $('tcaPurpose').value = a ? a.purpose : '';
+  $('tcaBring').value = a ? a.bring : 'Buku pink\nKad pengenalan'; $('tcaNote').value = a ? a.note : '';
+  $('tcaForm').classList.remove('hidden'); $('addTcaBtn').classList.add('hidden'); $('tcaDate').focus();
+}
+function closeTcaForm() { editingTca = null; $('tcaForm').classList.add('hidden'); $('addTcaBtn').classList.remove('hidden'); }
+function addBring(item) {
+  const list = bringList({ bring: $('tcaBring').value });
+  if (list.some(x => x.toLowerCase() === item.toLowerCase())) { toast('Sudah ada dalam senarai'); return; }
+  list.push(item); $('tcaBring').value = list.join('\n'); pop();
+}
+function saveTca() {
+  const v = {
+    date: $('tcaDate').value, time: $('tcaTime').value, place: $('tcaPlace').value.trim(), who: $('tcaWho').value.trim(),
+    purpose: $('tcaPurpose').value.trim(), bring: bringList({ bring: $('tcaBring').value }).join('\n'), note: $('tcaNote').value.trim()
+  };
+  if (!v.date) { toast('Pilih tarikh temu janji'); return; }
+  if (!editingTca && v.date < todayISO() && !confirm('Tarikh ini sudah lepas. Simpan juga?')) return;
+  const a = data.tcas.find(x => x.id === editingTca);
+  if (a) {
+    if (a.date !== v.date || a.time !== v.time) Object.keys(data.sent).forEach(k => { if (k.endsWith('|tca|' + a.id)) delete data.sent[k]; });
+    Object.assign(a, v);
+  } else data.tcas.push(Object.assign({ id: uid() }, v));
+  persist(); pop(); closeTcaForm(); renderTca(); checkReminders();
+  toast(a ? 'Temu janji dikemas kini ✓' : 'Temu janji ditambah ✓');
+}
+function delTca(id) {
+  const a = data.tcas.find(x => x.id === id); if (!a) return;
+  if (!confirm(`Padam temu janji ${fmtDate(a.date)}?`)) return;
+  data.tcas = data.tcas.filter(x => x.id !== id);
+  persist(); renderTca(); toast('Temu janji dipadam');
+}
+function exportTcaCalendar() {
+  const up = upcomingTcas();
+  if (!up.length) { toast('Tambah temu janji dahulu'); return; }
+  const stamp = icsStamp(), lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Baby Mama//MS', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH'];
+  const alarm = (trig, msg) => ['BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${icsText(msg)}`, `TRIGGER:${trig}`, 'END:VALARM'];
+  up.forEach(a => {
+    const day = a.date.replace(/-/g, ''), title = '🏥 TCA: ' + (a.purpose || 'Temu janji klinik');
+    const desc = [a.who && 'Jumpa: ' + a.who, a.purpose && 'Tujuan: ' + a.purpose, bringList(a).length && 'Perlu bawa: ' + bringList(a).join(', '), a.note && 'Nota: ' + a.note].filter(Boolean).join('\n');
+    lines.push('BEGIN:VEVENT', `UID:${a.id}@baby-mama-tca`, `DTSTAMP:${stamp}`,
+      ...(a.time ? [`DTSTART:${day}T${a.time.replace(':', '')}00`, 'DURATION:PT1H'] : [`DTSTART;VALUE=DATE:${day}`, `DTEND;VALUE=DATE:${addDays(a.date, 1).replace(/-/g, '')}`]),
+      `SUMMARY:${icsText(title)}`, ...(a.place ? [`LOCATION:${icsText(a.place)}`] : []), ...(desc ? [`DESCRIPTION:${icsText(desc)}`] : []),
+      ...alarm('-P3D', 'Lagi 3 hari: ' + title), ...alarm('-P1D', 'Esok: ' + title), ...alarm(a.time ? '-PT2H' : 'PT8H', 'Hari ini: ' + title), 'END:VEVENT');
+  });
+  lines.push('END:VCALENDAR');
+  download('baby-mama-tca.ics', lines.join('\r\n'), 'text/calendar');
+  toast('Fail kalendar TCA dimuat turun. Buka untuk tambah ✓');
 }
 
 /* ---------- Bersalin (babak 3D) ----------
@@ -1083,7 +1299,7 @@ function importData(file) {
   r.readAsText(file);
 }
 function resetData() {
-  if (!confirm('Padam SEMUA rekod tendangan, ubat dan profil? Tindakan ini tidak boleh dibatalkan.')) return;
+  if (!confirm('Padam SEMUA rekod tendangan, ubat, temu janji TCA dan profil? Tindakan ini tidak boleh dibatalkan.')) return;
   data = clone(DEFAULT); persist(); renderAll(); toast('Semua data dipadam');
 }
 
@@ -1095,8 +1311,8 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
   navigator.serviceWorker.register('sw.js').then(r => { swReg = r; }).catch(() => {});
 }
 // Notifikasi: Android/app terpasang perlukan service worker; browser biasa guna Notification terus
-function showNotif(title, body) {
-  const opt = { body, icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', tag: 'baby-mama-' + Date.now() };
+function showNotif(title, body, url) {
+  const opt = { body, icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', tag: 'baby-mama-' + Date.now(), data: { url: url || './' } };
   if (swReg && swReg.showNotification) { swReg.showNotification(title, opt).catch(() => {}); return; }
   try { new Notification(title, opt); } catch (e) {}
 }
@@ -1140,6 +1356,7 @@ function setupDates() {
   $('kickDate').onchange = () => $('kickDay').value = dayName($('kickDate').value);
   $('filterDate').onchange = () => { $('filterDay').value = dayName($('filterDate').value); renderKicks(); };
   $('medDate').onchange = renderMeds;
+  $('bringChips').innerHTML = BRING_CHIPS.map(c => `<button type="button" onclick="addBring('${c}')">＋ ${c}</button>`).join('');
   $('dueDate').oninput = showDueCalc; $('lmpDate').oninput = showDueCalc;
   $('reminderOn').onchange = e => { data.reminders = e.target.checked; persist(); toast(data.reminders ? 'Peringatan dihidupkan' : 'Peringatan dimatikan'); };
   $('importFile').onchange = e => { if (e.target.files[0]) importData(e.target.files[0]); e.target.value = ''; };
@@ -1147,7 +1364,7 @@ function setupDates() {
 function renderAll() {
   document.querySelectorAll('#home .bellyArt').forEach(el => el.innerHTML = BELLY_HTML);
   if (!$('birthScene').firstChild) $('birthScene').innerHTML = BIRTH_SVG;
-  loadProfile(); renderHome(); renderSession(); renderKicks(); renderMeds(); renderNotif();
+  loadProfile(); renderHome(); renderSession(); renderKicks(); renderMeds(); renderTca(); renderNotif();
   const p = preg(); setWeek(p && p.week >= 4 && p.week <= 40 ? p.week : 12, true);
 }
 document.querySelectorAll('.nav button').forEach(b => b.onclick = () => go(b.dataset.page));
@@ -1155,10 +1372,11 @@ setupDates(); renderAll();
 { const start = new URLSearchParams(location.search).get('page'); if (start && $(start) && $(start).classList.contains('page')) go(start); }
 setInterval(tickSession, 1000);
 setInterval(checkReminders, 15000);
+checkReminders();
 // Senyapkan muzik bila app ditutup / tukar tab, sambung bila kembali
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) { if (actx && actx.state === 'running') actx.suspend(); }
-  else { if (actx && actx.state === 'suspended' && (Music.playing || data.sound)) actx.resume(); checkReminders(); renderHome(); renderMeds(); }
+  else { if (actx && actx.state === 'suspended' && (Music.playing || data.sound)) actx.resume(); checkReminders(); renderHome(); renderMeds(); renderTca(); }
 });
 renderMusicBtn(); renderInstall(); askPersist();
 </script>

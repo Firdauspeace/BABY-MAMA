@@ -20,7 +20,15 @@ Boleh dibuka di iPhone (Safari) dan Android (Chrome). Pasang di skrin utama supa
 - **Ubat & suplemen:**
   - senarai ikut masa, boleh tanda sudah diambil, ubah dan padam
   - peringatan ketika app dibuka
+  - countdown ke ubat seterusnya
+  - stok ubat (pilihan): ditolak automatik bila ubat ditanda diambil, peringatan bila tinggal 7 hari atau kurang
+  - peringatan masih keluar jika app dibuka lewat (hingga 2 jam selepas masa ubat)
   - simpan ke kalendar telefon supaya telefon berbunyi walaupun app ditutup
+- **Temu janji klinik (TCA):**
+  - tarikh, masa, klinik, jumpa siapa, tujuan, barang perlu bawa dan nota
+  - countdown "lagi X hari" di skrin Utama dan halaman TCA
+  - peringatan dalam app 3 hari, 1 hari sebelum dan pada hari temu janji
+  - simpan ke kalendar telefon dengan alarm 3 hari, 1 hari dan 2 jam sebelum
 - **Sambut kelahiran:** animasi 3D yang dibuka bila cukup 9 bulan 10 hari. Baby berbedung muncul tersenyum di sebelah ibu.
 - **Muzik piano latar** yang lembut, dengan butang on/off.
 - **Backup:** muat turun dan pulihkan data.
