@@ -2,7 +2,7 @@
 
 Teman untuk ibu mengandung. Pantau tendangan baby, ubat dan perkembangan baby minggu demi minggu.
 
-**Buka app:** https://firdauspeace.github.io/baby-mama/
+**Buka app:** https://firdauspeace.github.io/BABY-MAMA/
 
 Boleh dibuka di iPhone (Safari) dan Android (Chrome). Pasang di skrin utama supaya app dibuka seperti app biasa dan boleh digunakan tanpa internet.
 
